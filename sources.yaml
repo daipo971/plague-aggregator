@@ -9,6 +9,7 @@
 #   3. enabled: false 的源会被跳过
 # ============================================================
 
+
 sources:
   # ---------- 官方 ----------
   - name: "WHO 新闻（英文）"
@@ -16,16 +17,19 @@ sources:
     rss: "https://www.who.int/rss-feeds/news-english.xml"
     enabled: true
 
+
   # ---------- 专业 ----------
   - name: "CIDRAP 鼠疫专题"
     type: professional
     rss: "https://www.cidrap.umn.edu/news/88/rss"
     enabled: true
 
+
   - name: "CDC《新发传染病》期刊 EID"
     type: professional
     rss: "http://wwwnc.cdc.gov/eid/rss/ahead-of-print.xml"
     enabled: true
+
 
   # ---------- 媒体（Google 新闻关键词，多语言） ----------
   - name: "Google 新闻 · plague（英文）"
@@ -33,15 +37,42 @@ sources:
     rss: "https://news.google.com/rss/search?q=plague&hl=en-US&gl=US&ceid=US:en"
     enabled: true
 
+
   - name: "Google 新闻 · 鼠疫（中文）"
     type: media
     rss: "https://news.google.com/rss/search?q=鼠疫&hl=zh-CN&gl=CN&ceid=CN:zh"
     enabled: true
 
+
   - name: "Google 新闻 · чума（俄文）"
     type: media
     rss: "https://news.google.com/rss/search?q=чума&hl=ru&gl=RU&ceid=RU:ru"
     enabled: true
+
+
+  - name: "Google 新闻 · peste（西语）"
+    type: media
+    rss: "https://news.google.com/rss/search?q=peste&hl=es&gl=ES&ceid=ES:es"
+    enabled: true
+
+
+  - name: "Google 新闻 · peste（法语）"
+    type: media
+    rss: "https://news.google.com/rss/search?q=peste&hl=fr&gl=FR&ceid=FR:fr"
+    enabled: true
+
+
+  - name: "Bing 新闻 · plague（英文）"
+    type: media
+    rss: "https://www.bing.com/news/search?q=plague&format=rss"
+    enabled: true
+
+
+  - name: "Bing 新闻 · 鼠疫（中文）"
+    type: media
+    rss: "https://www.bing.com/news/search?q=%E9%BC%A0%E7%96%AB&format=rss"
+    enabled: true
+
 
   # ---------- 备用：下面这些源未经验证，确认可用后取消注释 ----------
   # ECDC 的公开 RSS 是 JS 渲染页面，feedparser 抓不到，先留空
