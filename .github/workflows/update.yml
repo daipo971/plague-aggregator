@@ -1,0 +1,31 @@
+# GitHub Actions 工作流：每 30 分钟自动更新一次
+name: 更新疫情聚合
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+      - name: 运行抓取+生成
+        env:
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+        run: python scripts/run.py
+      - name: 提交更新
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data docs
+          git diff --cached --quiet || git commit -m "自动更新：$(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
