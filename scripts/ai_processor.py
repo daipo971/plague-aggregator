@@ -1,34 +1,97 @@
 """
-AI 处理模块：对抓取到的条目生成中文标题、一句话中文摘要，
-并判断是否涉及治疗/预防/就医建议。
+AI 处理模块：抓取新闻正文全文，生成专业级双语疫情简报。
+
+输出结构（每条）：
+- title_zh      中文标题
+- summary_zh    完整中文摘要（250-350字）
+- summary_en    English summary（150-200词）
+- timeline      事件时间线（按时间先后，最多6条）
+- treatment     治疗与防控措施（据报道整理）
+- relevant      报道是否与疫情/鼠疫相关（AI 判断）
+- medical_advice 是否涉及治疗/预防/就医建议
 
 设计要点：
-- 统一接口：AIProvider.summarize()，通过 config.yaml 的 ai.provider 切换模型
 - API Key 只从环境变量 AI_API_KEY 读取，代码和配置里不出现明文密钥
+- 先抓正文全文再做摘要，确保内容基于实际报道，不编造
 - 单条失败只跳过该条并记日志，不中断整个任务
 - 已处理过的链接走 ai_cache，不重复花钱调 AI
 """
 
+import html
 import json
 import logging
 import os
+import re
 
 import requests
 
 log = logging.getLogger("ai")
 
-# 要求 AI 输出的 JSON 字段说明（code 里再补上链接等字段）
-PROMPT_TEMPLATE = """你是一名疫情信息编辑。请阅读下面的新闻条目，输出 JSON（只输出 JSON，不要其他文字）：
+# 专业版提示词：双语 + 时间线 + 治疗方法，严格基于报道原文
+PROMPT_TEMPLATE = """你是一名资深疫情新闻编辑，擅长把外文疫情报道整理成专业的疫情简报。
+请阅读下面的新闻（标题+正文），输出 JSON（只输出 JSON，不要其他文字）：
 
 {{
-  "title_zh": "中文标题（20字以内，准确简洁）",
-  "summary_zh": "一句话中文摘要（60字以内，说清发生了什么）",
+  "title_zh": "中文标题（25字以内，准确、专业，点明事件核心）",
+  "summary_zh": "完整中文摘要（250-350字）：交代事件背景、发生地点、关键数据（病例数/死亡数/时间）、涉及机构、当前进展。只写报道中明确提到的内容，不要推测，不要编造数据。",
+  "summary_en": "English summary (150-200 words): professional news-brief style. Cover what happened, where, key figures (cases/deaths/dates), parties involved, and current status. Based strictly on the reported facts, no speculation.",
+  "timeline": ["时间线条目，按时间先后排列，最多6条。每条格式：日期（如报道明确）+ 事件；报道未明确日期的写'日期不详'+事件"],
+  "treatment": "治疗与防控措施（200字以内）：整理报道中提到的治疗方法、药物、疫苗、隔离与防控措施；如报道未提及，写'报道未提及具体治疗方法'",
+  "relevant": true/false（这篇报道是否与传染病/鼠疫疫情相关）,
   "medical_advice": true/false（内容是否涉及治疗、预防方法或就医建议）
 }}
 
-条目原文标题：{title}
-条目原文摘要：{text}
+硬性要求：
+1. 严格基于报道原文，不编造病例数、死亡数、日期等关键数据
+2. 时间线按时间先后排序
+3. 专业、客观的新闻语气，不渲染恐慌
+4. timeline 为空数组是可以的，不要硬凑
+
+新闻标题：{title}
+
+新闻正文：
+{text}
 """
+
+
+def fetch_full_text(url: str, timeout: int = 15, max_chars: int = 4000) -> str:
+    """
+    抓取新闻正文全文：去掉脚本/导航/页眉页脚，提取 <p> 段落。
+    失败返回空字符串（调用方降级用 RSS 摘要）。
+    """
+    try:
+        resp = requests.get(
+            url,
+            timeout=timeout,
+            headers={"User-Agent": "Mozilla/5.0 (compatible; outbreak-aggregator/1.0)"},
+        )
+        resp.raise_for_status()
+        raw = resp.text
+        # 去掉脚本、样式、导航、页眉页脚等非正文区块
+        cleaned_html = re.sub(
+            r"(?is)<(script|style|nav|header|footer|aside|form|noscript)[^>]*>.*?</\1>",
+            " ",
+            raw,
+        )
+        # 取所有 <p> 段落，正文一般都在这里
+        paras = re.findall(r"(?is)<p[^>]*>(.*?)</p>", cleaned_html)
+        kept = []
+        for p in paras:
+            t = re.sub(r"<[^>]+>", " ", p)
+            t = html.unescape(t)
+            t = re.sub(r"\s+", " ", t).strip()
+            if len(t) >= 40:  # 过滤导航残留、版权行等过短文本
+                kept.append(t)
+        text = "\n".join(kept)
+        if len(text) < 200:
+            # <p> 太少（某些站点用 div 排版），兜底全文去标签
+            t = re.sub(r"<[^>]+>", " ", raw)
+            t = html.unescape(t)
+            text = re.sub(r"\s+", " ", t).strip()
+        return text[:max_chars]
+    except Exception as e:  # noqa: BLE001 - 抓正文失败只记日志
+        log.warning("正文抓取失败 %s：%s", url, e)
+        return ""
 
 
 class AIProvider:
@@ -38,8 +101,35 @@ class AIProvider:
         raise NotImplementedError
 
 
+def _parse_result(content: str) -> dict | None:
+    """解析 AI 返回的 JSON，字段做长度保护。失败返回 None。"""
+    try:
+        data = json.loads(content)
+    except Exception:
+        # 兼容模型在 JSON 前后加了说明文字的情况
+        try:
+            start = content.find("{")
+            end = content.rfind("}") + 1
+            data = json.loads(content[start:end])
+        except Exception:
+            return None
+    timeline = data.get("timeline") or []
+    if not isinstance(timeline, list):
+        timeline = []
+    timeline = [str(t)[:150] for t in timeline[:6]]
+    return {
+        "title_zh": str(data.get("title_zh", ""))[:80],
+        "summary_zh": str(data.get("summary_zh", ""))[:600],
+        "summary_en": str(data.get("summary_en", ""))[:900],
+        "timeline": timeline,
+        "treatment": str(data.get("treatment", ""))[:400],
+        "relevant": bool(data.get("relevant", True)),
+        "medical_advice": bool(data.get("medical_advice", False)),
+    }
+
+
 class OpenAICompatibleProvider(AIProvider):
-    """OpenAI 兼容接口：OpenAI / DeepSeek / 通义千问等都走这里。"""
+    """OpenAI 兼容接口：OpenAI / DeepSeek / 智谱 / 通义千问等都走这里。"""
 
     def __init__(self, base_url: str, model: str, api_key: str, timeout: int):
         self.base_url = base_url.rstrip("/")
@@ -48,7 +138,7 @@ class OpenAICompatibleProvider(AIProvider):
         self.timeout = timeout
 
     def summarize(self, title: str, text: str) -> dict | None:
-        prompt = PROMPT_TEMPLATE.format(title=title[:300], text=text[:800])
+        prompt = PROMPT_TEMPLATE.format(title=title[:300], text=text[:3500])
         try:
             resp = requests.post(
                 f"{self.base_url}/chat/completions",
@@ -58,18 +148,14 @@ class OpenAICompatibleProvider(AIProvider):
                     "messages": [{"role": "user", "content": prompt}],
                     # 尽量让模型直接返回 JSON（不支持的接口会忽略该参数）
                     "response_format": {"type": "json_object"},
+                    "max_tokens": 2000,
                     "temperature": 0.3,
                 },
                 timeout=self.timeout,
             )
             resp.raise_for_status()
             content = resp.json()["choices"][0]["message"]["content"]
-            data = json.loads(content)
-            return {
-                "title_zh": str(data.get("title_zh", ""))[:60],
-                "summary_zh": str(data.get("summary_zh", ""))[:200],
-                "medical_advice": bool(data.get("medical_advice", False)),
-            }
+            return _parse_result(content)
         except Exception as e:  # noqa: BLE001 - 单条失败只记日志
             log.warning("AI 调用失败（openai_compatible）：%s", e)
             return None
@@ -84,7 +170,7 @@ class AnthropicProvider(AIProvider):
         self.timeout = timeout
 
     def summarize(self, title: str, text: str) -> dict | None:
-        prompt = PROMPT_TEMPLATE.format(title=title[:300], text=text[:800])
+        prompt = PROMPT_TEMPLATE.format(title=title[:300], text=text[:3500])
         try:
             resp = requests.post(
                 "https://api.anthropic.com/v1/messages",
@@ -95,22 +181,14 @@ class AnthropicProvider(AIProvider):
                 },
                 json={
                     "model": self.model,
-                    "max_tokens": 500,
+                    "max_tokens": 2000,
                     "messages": [{"role": "user", "content": prompt}],
                 },
                 timeout=self.timeout,
             )
             resp.raise_for_status()
-            # 取出返回文本里的 JSON 部分
             content = resp.json()["content"][0]["text"]
-            start = content.find("{")
-            end = content.rfind("}") + 1
-            data = json.loads(content[start:end])
-            return {
-                "title_zh": str(data.get("title_zh", ""))[:60],
-                "summary_zh": str(data.get("summary_zh", ""))[:200],
-                "medical_advice": bool(data.get("medical_advice", False)),
-            }
+            return _parse_result(content)
         except Exception as e:  # noqa: BLE001 - 单条失败只记日志
             log.warning("AI 调用失败（anthropic）：%s", e)
             return None
@@ -137,12 +215,84 @@ def get_provider(ai_cfg: dict) -> AIProvider | None:
     )
 
 
+def _empty_record(item: dict, url: str) -> dict:
+    """降级记录：新字段给空值，保证页面渲染不报错。"""
+    return {
+        "title_zh": item["title"] or "(无标题)",
+        "summary_zh": (item.get("summary_raw") or "暂无摘要")[:200],
+        "summary_en": "",
+        "timeline": [],
+        "treatment": "",
+        "relevant": True,
+        "url": url,
+        "source_name": item["source_name"],
+        "published": item["published"],
+        "source_type": item["source_type"],
+        "medical_advice": False,
+        "ai_processed": False,
+    }
+
+
+def _is_legacy(rec: dict) -> bool:
+    """老格式缓存（缺 timeline 字段）需要升级成专业版。"""
+    return "timeline" not in rec
+
+
+def _legacy_to_item(rec: dict, url: str) -> dict:
+    """把老缓存记录拼成可处理的条目（标题用中文标题，正文重新抓取）。"""
+    return {
+        "title": rec.get("title_zh", ""),
+        "link": url,
+        "summary_raw": rec.get("summary_zh", ""),
+        "source_name": rec.get("source_name", ""),
+        "published": rec.get("published", ""),
+        "source_type": rec.get("source_type", ""),
+    }
+
+
+def _make_record(item: dict, url: str, ai_out: dict) -> dict:
+    """由 AI 输出组装标准记录。"""
+    return {
+        "title_zh": ai_out["title_zh"] or item["title"],
+        "summary_zh": ai_out["summary_zh"],
+        "summary_en": ai_out["summary_en"],
+        "timeline": ai_out["timeline"],
+        "treatment": ai_out["treatment"],
+        "relevant": ai_out["relevant"],
+        "url": url,
+        "source_name": item["source_name"],
+        "published": item["published"],
+        "source_type": item["source_type"],
+        "medical_advice": ai_out["medical_advice"],
+        "ai_processed": True,
+    }
+
+
+def _upgrade_one(item: dict, provider: AIProvider, ai_cache: dict) -> dict:
+    """
+    升级单条老记录：成功则替换为专业版；失败则保留原摘要，
+    并标记 timeline=[] 避免每轮重复浪费预算。
+    """
+    url = item["link"]
+    rec = ai_cache[url]
+    full_text = fetch_full_text(url) or item.get("summary_raw", "")
+    ai_out = provider.summarize(item["title"], full_text)
+    if ai_out is None:
+        log.warning("老记录升级失败，保留原摘要：%s", url)
+        rec["timeline"] = []
+        return rec
+    new_rec = _make_record(item, url, ai_out)
+    ai_cache[url] = new_rec
+    return new_rec
+
+
 def process_items(items: list, processed: dict, ai_cfg: dict) -> list:
     """
-    对新条目逐条调 AI。返回处理好的条目列表（固定 JSON 结构）。
-    - 已在 ai_cache 里的直接复用，不花钱
-    - 单条 AI 失败则跳过该条，只记日志
-    - 超过 max_per_run 条的，剩下的本次跳过（下次跑再处理）
+    对新条目逐条处理：抓正文全文 -> 调 AI 生成专业简报。
+    另外用剩余预算把老格式缓存分批升级成专业版（每轮最多 max_per_run 次调用）。
+    - 已在 ai_cache 且为新格式的直接复用，不花钱
+    - 单条 AI 失败：新条目降级为原文直出；老记录保留原摘要
+    - 超过 max_per_run 的，剩下的下次运行继续
     """
     provider = get_provider(ai_cfg)
     ai_cache = processed.setdefault("ai_cache", {})
@@ -153,40 +303,45 @@ def process_items(items: list, processed: dict, ai_cfg: dict) -> list:
     for item in items:
         url = item["link"]
         if url in ai_cache:
-            results.append(ai_cache[url])  # 命中缓存，不调 AI
+            rec = ai_cache[url]
+            if not _is_legacy(rec):
+                results.append(rec)  # 新格式缓存，直接复用
+                continue
+            # 老格式缓存：走升级通道（计入预算）
+            if provider is None or ai_calls >= max_per_run:
+                results.append(rec)
+                continue
+            ai_calls += 1
+            results.append(_upgrade_one(item, provider, ai_cache))
             continue
         if provider is None or ai_calls >= max_per_run:
             # 没有 AI（或达到本轮上限）：降级为原文直出，保证页面不空
-            fallback = {
-                "title_zh": item["title"] or "(无标题)",
-                "summary_zh": (item["summary_raw"] or "暂无摘要")[:200],
-                "url": url,
-                "source_name": item["source_name"],
-                "published": item["published"],
-                "source_type": item["source_type"],
-                "medical_advice": False,
-                "ai_processed": False,
-            }
+            fallback = _empty_record(item, url)
             ai_cache[url] = fallback
             results.append(fallback)
             continue
         ai_calls += 1
-        ai_out = provider.summarize(item["title"], item["summary_raw"])
+        # 先抓正文全文，失败则用 RSS 摘要兜底
+        full_text = fetch_full_text(url) or item.get("summary_raw", "")
+        ai_out = provider.summarize(item["title"], full_text)
         if ai_out is None:
-            log.warning("条目 AI 处理失败，已跳过：%s", url)
-            continue  # 按需求：跳过该条，不中断任务
-        record = {
-            "title_zh": ai_out["title_zh"] or item["title"],
-            "summary_zh": ai_out["summary_zh"],
-            "url": url,
-            "source_name": item["source_name"],
-            "published": item["published"],
-            "source_type": item["source_type"],
-            "medical_advice": ai_out["medical_advice"],
-            "ai_processed": True,
-        }
+            log.warning("条目 AI 处理失败，已降级：%s", url)
+            fallback = _empty_record(item, url)
+            ai_cache[url] = fallback
+            results.append(fallback)
+            continue
+        record = _make_record(item, url, ai_out)
         ai_cache[url] = record
         results.append(record)
+
+    # 老记录升级扫尾：用剩余预算继续升级不在本轮新条目里的老记录
+    if provider is not None and ai_calls < max_per_run:
+        for url, rec in list(ai_cache.items()):
+            if ai_calls >= max_per_run:
+                break
+            if _is_legacy(rec):
+                ai_calls += 1
+                _upgrade_one(_legacy_to_item(rec, url), provider, ai_cache)
 
     log.info("AI 处理完成：新调用 %d 次，共产出 %d 条", ai_calls, len(results))
     return results

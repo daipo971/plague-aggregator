@@ -53,6 +53,10 @@ def main():
             rec = {
                 "title_zh": item["title"] or "(无标题)",
                 "summary_zh": (item["summary_raw"] or "暂无摘要")[:200],
+                "summary_en": "",
+                "timeline": [],
+                "treatment": "",
+                "relevant": True,
                 "url": item["link"],
                 "source_name": item["source_name"],
                 "published": item["published"],

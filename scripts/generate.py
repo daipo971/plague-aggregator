@@ -47,21 +47,62 @@ def fmt_time(iso_str: str, tz_name: str) -> str:
 
 
 def render_card(item: dict, tz_name: str) -> str:
-    """渲染单条信息卡片。"""
+    """渲染单条信息卡片：中文摘要 + 时间线 + 治疗方法 + 英文摘要（折叠）。"""
     medical_note = ""
     if item.get("medical_advice"):
         medical_note = (
             '<div class="medical-note">⚠️ 该条目涉及治疗/预防/就医建议，'
             "请以医生意见为准</div>"
         )
+    relevant_note = ""
+    if item.get("ai_processed") and not item.get("relevant", True):
+        relevant_note = (
+            '<div class="relevant-note">⚠️ AI 判断该报道可能与疫情无关，仅供参考</div>'
+        )
+    ai_badge = (
+        '<span class="ai-badge">✨ AI 整理</span>' if item.get("ai_processed") else ""
+    )
+
+    timeline_html = ""
+    timeline = item.get("timeline") or []
+    if timeline:
+        tl_items = "\n".join(f"<li>{esc(t)}</li>" for t in timeline)
+        timeline_html = f"""
+      <div class="timeline">
+        <div class="tl-title">🕐 事件时间线</div>
+        <ul>{tl_items}</ul>
+      </div>"""
+
+    treatment_html = ""
+    treatment = (item.get("treatment") or "").strip()
+    if treatment:
+        treatment_html = f"""
+      <div class="treatment">
+        <div class="tr-title">💊 治疗与防控<span class="tr-sub">（据报道整理，非医疗建议）</span></div>
+        <p>{esc(treatment)}</p>
+      </div>"""
+
+    en_html = ""
+    summary_en = (item.get("summary_en") or "").strip()
+    if summary_en:
+        en_html = f"""
+      <details class="en-block">
+        <summary>🇬🇧 English summary</summary>
+        <p>{esc(summary_en)}</p>
+      </details>"""
+
     return f"""
     <article class="card">
       <div class="meta">
-        <span class="tag">{esc(item.get('source_name', ''))}</span>
+        <span><span class="tag">{esc(item.get('source_name', ''))}</span> {ai_badge}</span>
         <time>{esc(fmt_time(item.get('published', ''), tz_name))}</time>
       </div>
       <h3><a href="{esc(item.get('url', ''))}" target="_blank" rel="noopener">{esc(item.get('title_zh', ''))}</a></h3>
       <p class="summary">{esc(item.get('summary_zh', ''))}</p>
+      {timeline_html}
+      {treatment_html}
+      {en_html}
+      {relevant_note}
       {medical_note}
       <a class="origin" href="{esc(item.get('url', ''))}" target="_blank" rel="noopener">阅读原文 →</a>
     </article>"""
@@ -115,6 +156,23 @@ def render_page(items: list, cfg: dict, updated_at: str) -> str:
   .summary {{ margin: 6px 0 10px; font-size: .9rem; color: #444; }}
   .medical-note {{ background: #fff3e0; border-left: 3px solid #ff9800; padding: 8px 10px;
                    font-size: .8rem; color: #6d4c00; margin: 8px 0; border-radius: 0 6px 6px 0; }}
+  .relevant-note {{ background: #f3e5f5; border-left: 3px solid #9c27b0; padding: 8px 10px;
+                   font-size: .8rem; color: #4a148c; margin: 8px 0; border-radius: 0 6px 6px 0; }}
+  .ai-badge {{ background: #e8f0fe; color: #1a73e8; font-size: .7rem; padding: 2px 8px;
+               border-radius: 20px; margin-left: 6px; }}
+  .timeline {{ margin: 10px 0; padding: 10px 12px; background: #f8fafc;
+               border-radius: 8px; font-size: .85rem; }}
+  .tl-title {{ font-weight: 700; margin-bottom: 6px; color: #334155; }}
+  .timeline ul {{ margin: 0; padding-left: 18px; color: #475569; }}
+  .timeline li {{ margin-bottom: 4px; }}
+  .treatment {{ margin: 10px 0; padding: 10px 12px; background: #ecfdf5;
+                border-left: 3px solid #10b981; border-radius: 0 8px 8px 0; font-size: .85rem; }}
+  .tr-title {{ font-weight: 700; margin-bottom: 6px; color: #065f46; }}
+  .tr-sub {{ font-weight: 400; font-size: .75rem; color: #6b7280; }}
+  .treatment p {{ margin: 0; color: #374151; }}
+  .en-block {{ margin: 10px 0; font-size: .82rem; color: #555; }}
+  .en-block summary {{ cursor: pointer; color: #1a73e8; }}
+  .en-block p {{ margin: 6px 0 0; padding: 8px 10px; background: #f8fafc; border-radius: 6px; }}
   .origin {{ font-size: .82rem; color: #1a73e8; text-decoration: none; }}
   footer {{ text-align: center; font-size: .75rem; color: #999; padding: 20px; }}
   footer a {{ color: #1a73e8; }}
