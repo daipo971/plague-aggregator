@@ -1,0 +1,4 @@
+# Python 依赖
+feedparser>=6.0.0   # 解析 RSS
+pyyaml>=6.0.0       # 读取 yaml 配置
+requests>=2.31.0    # 抓取网页 / 调用 AI 接口

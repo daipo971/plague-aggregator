@@ -1,0 +1,57 @@
+# ============================================================
+# 信源配置文件
+# 说明：
+#   1. 增删信源只改这里，不用动代码
+#   2. type 只能填以下三类（公开站点只收录这三类）：
+#        official      官方机构（WHO、各国疾控等）
+#        professional  专业机构（CIDRAP、学术期刊等）
+#        media         正规媒体（Google 新闻关键词等）
+#   3. enabled: false 的源会被跳过
+# ============================================================
+
+sources:
+  # ---------- 官方 ----------
+  - name: "WHO 新闻（英文）"
+    type: official
+    rss: "https://www.who.int/rss-feeds/news-english.xml"
+    enabled: true
+
+  # ---------- 专业 ----------
+  - name: "CIDRAP 鼠疫专题"
+    type: professional
+    rss: "https://www.cidrap.umn.edu/news/88/rss"
+    enabled: true
+
+  - name: "CDC《新发传染病》期刊 EID"
+    type: professional
+    rss: "http://wwwnc.cdc.gov/eid/rss/ahead-of-print.xml"
+    enabled: true
+
+  # ---------- 媒体（Google 新闻关键词，多语言） ----------
+  - name: "Google 新闻 · plague（英文）"
+    type: media
+    rss: "https://news.google.com/rss/search?q=plague&hl=en-US&gl=US&ceid=US:en"
+    enabled: true
+
+  - name: "Google 新闻 · 鼠疫（中文）"
+    type: media
+    rss: "https://news.google.com/rss/search?q=鼠疫&hl=zh-CN&gl=CN&ceid=CN:zh"
+    enabled: true
+
+  - name: "Google 新闻 · чума（俄文）"
+    type: media
+    rss: "https://news.google.com/rss/search?q=чума&hl=ru&gl=RU&ceid=RU:ru"
+    enabled: true
+
+  # ---------- 备用：下面这些源未经验证，确认可用后取消注释 ----------
+  # ECDC 的公开 RSS 是 JS 渲染页面，feedparser 抓不到，先留空
+  # - name: "ECDC"
+  #   type: official
+  #   rss: ""
+  #   enabled: false
+  #
+  # WHO Disease Outbreak News 没有公开 RSS，只有 JSON API，可自行研究后填写
+  # - name: "WHO 突发疫情（DON）"
+  #   type: official
+  #   rss: ""
+  #   enabled: false

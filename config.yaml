@@ -1,0 +1,33 @@
+# ============================================================
+# 站点与 AI 配置文件
+# 说明：改这里即可调整站点行为，不用动代码
+# ============================================================
+
+# ---------- 站点 ----------
+site:
+  title: "全球鼠疫 / 疫情信息聚合"
+  description: "聚合 WHO、CIDRAP、CDC 等官方与专业信源的疫情动态，只收录标题、摘要与原文链接"
+  base_url: "https://example.com"   # 上线后改成你自己的域名（影响 RSS 里的链接）
+  timezone: "Asia/Taipei"           # 显示时间用的时区
+  max_items_per_source: 20          # 每个信源每次最多抓取多少条
+  keep_days: 30                     # 只保留最近 N 天的内容
+  max_items_total: 300               # 页面上最多保留多少条
+
+# ---------- AI 处理 ----------
+ai:
+  enabled: true               # 设为 false 则跳过 AI，直接用原文标题+截断摘要展示
+  provider: "openai_compatible"   # 可选：openai_compatible / anthropic
+  max_per_run: 30             # 每次运行最多调用 AI 处理多少条新内容（控制费用）
+  timeout: 60                 # 单次 AI 调用超时（秒）
+
+  # OpenAI 兼容接口（OpenAI / DeepSeek / 通义千问等都走这里）
+  openai_compatible:
+    base_url: "https://api.deepseek.com/v1"   # 示例，可换成其他兼容接口地址
+    model: "deepseek-chat"                    # 示例，换成你实际要用的模型名
+
+  # Anthropic 官方接口
+  anthropic:
+    model: ""   # 填写模型名，例如 claude-sonnet-4-6（以官方文档为准）
+
+# API Key 不写在这里！
+# 从环境变量 AI_API_KEY 读取，GitHub 上配置为 Secrets，见 DEPLOY.md
