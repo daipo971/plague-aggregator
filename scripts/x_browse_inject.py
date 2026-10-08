@@ -36,8 +36,17 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelna
 log = logging.getLogger("x_browse_inject")
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SOURCE_NAME = "X 推特 · plague 阴谋论（争议）"
-SOURCE_TYPE = "controversial"
+# 默认来源（争议说法）；inbox 里每条可用 source_name / source_type 覆盖（如未证实）
+DEFAULT_SOURCE_NAME = "X 推特 · plague 阴谋论（争议）"
+DEFAULT_SOURCE_TYPE = "controversial"
+ALLOWED_SOURCE_TYPES = {"unverified", "controversial"}
+
+
+def _clean_title(text: str) -> str:
+    """清理标题：复用 fetch 逻辑，并额外去掉 @用户名（隐私匿名）。"""
+    t = clean_title(text)
+    t = re.sub(r"@\w+", "", t)
+    return re.sub(r"\s+", " ", t).strip(" -|·:：")
 
 
 def _bigrams(text: str) -> set:
@@ -91,19 +100,26 @@ def build_record(post: dict) -> dict | None:
         return None
     published = _norm_time(post.get("published"))
     summary = detail if detail else strip_html(text)
+    stype = post.get("source_type", DEFAULT_SOURCE_TYPE)
+    if stype not in ALLOWED_SOURCE_TYPES:
+        stype = DEFAULT_SOURCE_TYPE
+    # title 字段可由采集方直接提供中性标题（匿名）；否则从正文清理生成
+    title = (post.get("title") or "").strip() or _clean_title(text)
     return {
-        "title_zh": (clean_title(text)[:200] or "(无标题)"),
+        "title_zh": (title[:200] or "(无标题)"),
         "summary_zh": summary[:1200] or "暂无摘要",
         "summary_en": "",
         "timeline": [],
         "treatment": "",
         "relevant": True,
         "url": link,
-        "source_name": SOURCE_NAME,
+        "source_name": post.get("source_name", DEFAULT_SOURCE_NAME),
         "published": published,
-        "source_type": SOURCE_TYPE,
+        "source_type": stype,
         "medical_advice": False,
         "ai_processed": False,
+        # 人工整理标记：AI 流水线跳过此类记录，不覆盖人工写好的中文解读
+        "manual": True,
     }
 
 

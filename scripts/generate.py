@@ -31,16 +31,16 @@ CAUTION_TYPES = {
     "controversial": "以下内容属于争议说法或阴谋论，缺乏可靠证据，不代表本站观点。请勿据此改变就医或防疫行为。",
 }
 
-# 页面顶部固定医疗提示（通用公共卫生信息）
+# 页面顶部固定医疗提示（通用公共卫生信息，覆盖所有传染病）
 HEALTH_BANNER = (
-    "鼠疫是由鼠疫耶尔森菌引起的细菌性传染病，早期使用抗生素治疗效果好。"
-    "如出现发烧、淋巴结肿痛、咳嗽咯血等症状，请尽快就医。本站仅聚合公开信息，"
-    "不提供诊疗建议，健康问题请以医生意见为准。"
+    "本站聚合 WHO、各国疾控等官方与专业信源及媒体公开报道的全球传染病疫情信息，"
+    "仅供参考，不提供诊疗建议。如出现发热、咳嗽、腹泻、皮疹等不适症状，请尽快就医，"
+    "健康问题请以医生意见和官方指引为准。"
 )
 
 OFFICIAL_LINKS = [
-    ("WHO 鼠疫介绍（事实说明）", "https://www.who.int/news-room/fact-sheets/detail/plague"),
-    ("美国 CDC 鼠疫专题", "https://www.cdc.gov/plague/index.html"),
+    ("WHO 突发卫生事件（英文）", "https://www.who.int/emergencies"),
+    ("美国 CDC 疫情动态（英文）", "https://www.cdc.gov/outbreaks.html"),
 ]
 
 COMMON_CSS = """
@@ -167,7 +167,9 @@ def render_card(item: dict, tz_name: str) -> str:
     search_text = " ".join([title, brief, source, disease]).lower()
     disease_badge = f'<span class="disease-tag">🦠 {esc(disease)}</span>' if disease and disease != "未明确" else ""
 
-    if item.get("ai_processed"):
+    if item.get("manual"):
+        status_badge = '<span class="ai-badge">✍️ 人工整理</span>'
+    elif item.get("ai_processed"):
         status_badge = '<span class="ai-badge">✨ AI 整理</span>'
     else:
         status_badge = '<span class="raw-badge">原文 · 未翻译</span>'

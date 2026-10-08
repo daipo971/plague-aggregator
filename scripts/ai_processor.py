@@ -297,8 +297,10 @@ def _upgrade_one(item: dict, provider: AIProvider, ai_cache: dict) -> dict:
 
 
 def _needs_retry(rec: dict) -> bool:
-    """未成功 AI 处理（原文直出）且重试次数未超限的记录，下次运行继续补跑。"""
-    return rec.get("ai_processed") is False and not _is_legacy(rec) and rec.get("retries", 0) < MAX_RETRIES
+    """未成功 AI 处理（原文直出）且重试次数未超限的记录，下次运行继续补跑。
+    人工整理的记录（manual=True）跳过，避免 AI 覆盖人工写好的中文解读。"""
+    return (rec.get("ai_processed") is False and not _is_legacy(rec)
+            and not rec.get("manual") and rec.get("retries", 0) < MAX_RETRIES)
 
 
 MAX_RETRIES = 3

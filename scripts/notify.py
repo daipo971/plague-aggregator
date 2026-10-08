@@ -25,15 +25,6 @@ BARK_API = "https://api.day.app"
 TG_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TG_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 
-# 严重程度关键词（标题或摘要命中即推送）
-ALERT_KEYWORDS = [
-    "确诊", "死亡", "爆发", "疫情", "紧急", "新增",
-    "confirmed", "death", "deaths", "outbreak", "epidemic", "emergency",
-    "вспышка", "подтвержден",  # 俄语：爆发、确诊
-    "éclosion", "confirmé", "décès",  # 法语
-    "brote", "confirmado", "muerte",  # 西语
-]
-
 # 突发疫情关键词（命中即最高优先级推送，标题加 🚨）
 BREAKING_KEYWORDS = [
     "突发", "突现", "不明原因", "未知病原", "紧急警报", "卫生紧急",
@@ -48,10 +39,10 @@ MAX_PUSH_PER_RUN = 3
 
 
 def is_significant(rec: dict) -> bool:
+    """只推送两类：官方来源，或命中突发关键词（任意来源）。"""
     if rec.get("source_type") == "official":
         return True
-    text = (rec.get("title_zh", "") + " " + rec.get("summary_zh", "")).lower()
-    return any(kw.lower() in text for kw in ALERT_KEYWORDS)
+    return is_breaking(rec)
 
 
 def is_breaking(rec: dict) -> bool:
