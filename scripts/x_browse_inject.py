@@ -83,13 +83,17 @@ def build_record(post: dict) -> dict | None:
     link = (post.get("url") or "").strip()
     if not text or not link:
         return None
-    if not is_relevant(text, ""):
+    # detail：人工撰写的详细中文解读（人物/说法/传播/背景），优先采用；
+    # force：明确相关但未命中关键词过滤时跳过相关性检查
+    detail = (post.get("detail") or "").strip()
+    if not post.get("force") and not is_relevant(text, "") and not detail:
         log.info("丢弃无关内容：%s", text[:60])
         return None
     published = _norm_time(post.get("published"))
+    summary = detail if detail else strip_html(text)
     return {
         "title_zh": (clean_title(text)[:200] or "(无标题)"),
-        "summary_zh": (strip_html(text)[:500] or "暂无摘要"),
+        "summary_zh": summary[:1200] or "暂无摘要",
         "summary_en": "",
         "timeline": [],
         "treatment": "",
