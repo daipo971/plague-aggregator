@@ -39,6 +39,16 @@ sources:
     rss: "http://wwwnc.cdc.gov/eid/rss/ahead-of-print.xml"
     enabled: true
 
+  - name: "STAT News · 卫生新闻"
+    type: professional
+    rss: "https://www.statnews.com/feed/"
+    enabled: true
+
+  - name: "CDC Newsroom · 官方新闻"
+    type: official
+    rss: "https://tools.cdc.gov/api/v2/resources/media/404952.rss"
+    enabled: true
+
 
   # ---------- 媒体（Google 新闻关键词，多语言） ----------
   - name: "Google 新闻 · plague（英文）"
