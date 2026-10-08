@@ -6,8 +6,8 @@
 
 # ---------- 站点 ----------
 site:
-  title: "全球鼠疫 / 疫情信息聚合"
-  description: "聚合 WHO、CIDRAP、CDC 等官方与专业信源的疫情动态，只收录标题、摘要与原文链接"
+  title: "全球传染病疫情信息聚合"
+  description: "聚合 WHO、CDC、CIDRAP 等官方与专业信源的传染病疫情动态，含 AI 整理的疾病介绍、治疗与防控信息"
   base_url: "https://daipo971.github.io/plague-aggregator"   # 站点地址（影响 RSS 里的链接）；绑定自定义域名后改成新域名
   timezone: "Asia/Taipei"           # 显示时间用的时区
   max_items_per_source: 20          # 每个信源每次最多抓取多少条
