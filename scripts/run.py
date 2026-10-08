@@ -27,19 +27,29 @@ log = logging.getLogger("run")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def _bigrams(text: str) -> set:
+    t = re.sub(r"[\W_]+", "", text.lower())
+    return {t[i:i + 2] for i in range(len(t) - 1)} or {t}
+
+
 def _dedupe(records: list) -> list:
-    """同一事件被多个信源转载时只保留最新一条（按标题去重，去掉末尾的媒体名）。"""
-    seen = set()
-    out = []
-    for rec in records:
+    """同一事件被多个信源以不同措辞报道时只保留最新一条（字符二元组相似度 >= 0.6 视为同一事件）。"""
+    kept = []
+    kept_grams = []
+    for rec in records:  # 已按时间倒序，先保留的是最新的
         title = rec.get("title_zh") or ""
         title = re.sub(r"\s[-|–]\s[^-|–]{1,30}$", "", title)  # 去掉 " - AP News" 这类后缀
-        key = re.sub(r"[\W_]+", "", title.lower())[:30]
-        if key and key in seen:
-            continue
-        seen.add(key)
-        out.append(rec)
-    return out
+        grams = _bigrams(title)
+        duplicate = False
+        for g in kept_grams:
+            inter = len(grams & g)
+            if inter and inter / len(grams | g) >= 0.6:
+                duplicate = True
+                break
+        if not duplicate:
+            kept.append(rec)
+            kept_grams.append(grams)
+    return kept
 
 
 def main():

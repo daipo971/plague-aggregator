@@ -16,6 +16,13 @@
 > 不想花钱调 AI？把 `config.yaml` 里 `ai.enabled` 改为 `false`，
 > 网站会用原文标题+摘要直接展示，照样能跑。
 
+## 二之二、可选：配置 X（推特）信源
+
+社交平台的未证实与争议说法栏目需要 X 的搜索 API，这是付费服务（免费套餐一般不提供搜索，价格以 X 官网为准）。
+1. 在 X 开发者平台申请付费套餐，拿到 **Bearer Token**。
+2. 在仓库 Settings → Secrets and variables → Actions 里新增 Secret，Name 填 `X_BEARER_TOKEN`。
+3. 没有配置时，相关栏目会是空的，其他信源不受影响。
+
 ## 三、开启 GitHub Pages
 
 1. **Settings** → **Pages**。

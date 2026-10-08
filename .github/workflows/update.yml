@@ -14,9 +14,15 @@ on:
 permissions:
   contents: write  # 需要写权限，以便把新内容提交回仓库
 
+# 同一时间只允许一个运行，避免两次运行同时提交造成冲突
+concurrency:
+  group: update-aggregator
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: 拉取代码
         uses: actions/checkout@v4
@@ -34,6 +40,7 @@ jobs:
           # API Key 从仓库 Secrets 读取，绝不写在代码里
           # 配置方法见 DEPLOY.md
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
         run: python scripts/run.py
 
       - name: 推送通知

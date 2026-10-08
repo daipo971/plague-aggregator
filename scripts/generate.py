@@ -235,7 +235,9 @@ def render_overview(items: list, tz_name: str) -> str:
         f'<div class="stat"><b style="color:{color}">{counts[key]}</b><span>{label}</span></div>'
         for key, label, color, _ in COLUMNS
     )
-    latest = sorted(items, key=lambda x: x.get("published", ""), reverse=True)[:5]
+    # 最新要闻只放已经用中文整理好的条目，避免显示外文原标题
+    translated = [i for i in items if i.get("ai_processed") and i.get("brief_zh")]
+    latest = sorted(translated, key=lambda x: x.get("published", ""), reverse=True)[:5]
     latest_html = "".join(
         f'<li><a href="{esc(i.get("url", ""))}" target="_blank" rel="noopener">'
         f'{esc(brief_of(i))}</a>'

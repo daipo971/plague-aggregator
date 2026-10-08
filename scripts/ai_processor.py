@@ -38,7 +38,7 @@ PROMPT_TEMPLATE = """你是一名资深疫情新闻编辑，擅长把外文疫�
   "summary_en": "English summary (150-200 words): professional news-brief style. Cover what happened, where, key figures (cases/deaths/dates), parties involved, and current status. Based strictly on the reported facts, no speculation.",
   "timeline": ["时间线条目，按时间先后排列，最多6条。每条格式：日期（如报道明确）+ 事件；报道未明确日期的写'日期不详'+事件"],
   "treatment": "治疗与防控措施（200字以内）：整理报道中提到的治疗方法、药物、疫苗、隔离与防控措施；如报道未提及，写'报道未提及具体治疗方法'",
-  "relevant": true/false（这篇报道是否与传染病/鼠疫疫情相关）,
+  "relevant": true/false（这篇报道是否与鼠疫或传染病疫情直接相关；仅提到"plague"等词但讲其他话题（如比喻、影视、虫害）则为 false）,
   "medical_advice": true/false（内容是否涉及治疗、预防方法或就医建议）
 }}
 
@@ -328,6 +328,23 @@ def process_items(items: list, processed: dict, ai_cfg: dict) -> list:
         pending = [(u, r) for u, r in ai_cache.items() if _needs_retry(r)]
         pending.sort(key=lambda x: x[1].get("published", ""), reverse=True)
         for url, rec in pending:
+            if ai_calls >= max_per_run:
+                break
+            new_rec = translate(_legacy_to_item(rec, url), url)
+            if new_rec is not None:
+                ai_cache[url] = new_rec
+            else:
+                rec["retries"] = rec.get("retries", 0) + 1
+
+    # 1b) 用剩余额度给老记录补一句话要点（brief_zh）
+    if provider is not None:
+        no_brief = [
+            (u, r) for u, r in ai_cache.items()
+            if r.get("ai_processed") and not r.get("brief_zh") and not _is_legacy(r)
+            and r.get("retries", 0) < MAX_RETRIES
+        ]
+        no_brief.sort(key=lambda x: x[1].get("published", ""), reverse=True)
+        for url, rec in no_brief:
             if ai_calls >= max_per_run:
                 break
             new_rec = translate(_legacy_to_item(rec, url), url)
