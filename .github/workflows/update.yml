@@ -1,31 +1,54 @@
+# ============================================================
 # GitHub Actions 工作流：每 30 分钟自动更新一次
+# 还可以在 Actions 页面点 "Run workflow" 手动触发
+# ============================================================
+
 name: 更新疫情聚合
+
 on:
   schedule:
+    # 每 30 分钟跑一次（UTC 时间）
     - cron: "*/30 * * * *"
-  workflow_dispatch:
+  workflow_dispatch:  # 允许手动触发
+
 permissions:
-  contents: write
+  contents: write  # 需要写权限，以便把新内容提交回仓库
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - name: 拉取代码
         uses: actions/checkout@v4
+
       - name: 安装 Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: 安装依赖
         run: pip install -r requirements.txt
+
       - name: 运行抓取+生成
         env:
+          # API Key 从仓库 Secrets 读取，绝不写在代码里
+          # 配置方法见 DEPLOY.md
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
         run: python scripts/run.py
+
+      - name: 推送通知
+        env:
+          # Telegram / Bark 推送密钥（可选，配置方法见 README）
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BARK_KEY: ${{ secrets.BARK_KEY }}
+        run: python scripts/notify.py
+
       - name: 提交更新
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data docs
+          # 只有内容变化时才提交，避免空提交
           git diff --cached --quiet || git commit -m "自动更新：$(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
