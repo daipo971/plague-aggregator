@@ -26,7 +26,7 @@ ai:
   # OpenAI 兼容接口（OpenAI / DeepSeek / 通义千问等都走这里）
   openai_compatible:
     base_url: "https://open.bigmodel.cn/api/paas/v4"  # 智谱 Zhipu（GLM）OpenAI 兼容接口
-    model: "glm-4-flash"                         # 智谱免费模型；要更好效果可换 glm-4 / glm-4-plus
+    model: "glm-4.5-flash"                        # 智谱免费模型；要更好效果可换 glm-4 / glm-4-plus
 
 
   # Anthropic 官方接口
