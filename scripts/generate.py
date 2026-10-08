@@ -67,6 +67,7 @@ COMMON_CSS = """
   .meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
           gap: 6px; font-size: .75rem; color: #888; }
   .tag { background: #eef2f7; color: #345; padding: 2px 8px; border-radius: 20px; }
+  .disease-tag { background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 20px; margin-left: 6px; font-weight: 600; }
   .brief { margin: 4px 0 6px; font-size: .98rem; font-weight: 600; color: #1f2937; }
   .summary { margin: 6px 0 10px; font-size: .9rem; color: #444; }
   details.more { margin-top: 6px; }
@@ -162,7 +163,9 @@ def render_card(item: dict, tz_name: str) -> str:
     title = item.get("title_zh", "")
     brief = brief_of(item)
     source = item.get("source_name", "")
-    search_text = " ".join([title, brief, source]).lower()
+    disease = item.get("disease_zh", "")
+    search_text = " ".join([title, brief, source, disease]).lower()
+    disease_badge = f'<span class="disease-tag">🦠 {esc(disease)}</span>' if disease and disease != "未明确" else ""
 
     if item.get("ai_processed"):
         status_badge = '<span class="ai-badge">✨ AI 整理</span>'
@@ -205,9 +208,9 @@ def render_card(item: dict, tz_name: str) -> str:
     summary_zh = item.get("summary_zh", "")
     url = esc(item.get("url", ""))
     return f"""
-    <article class="card" data-cat="{esc(item.get('source_type', ''))}" data-search="{esc(search_text)}">
+    <article class="card" data-cat="{esc(item.get('source_type', ''))}" data-disease="{esc(disease)}" data-search="{esc(search_text)}">
       <div class="meta">
-        <span><span class="tag">{esc(source)}</span>{status_badge}</span>
+        <span><span class="tag">{esc(source)}</span>{disease_badge}{status_badge}</span>
         <time>{esc(fmt_time(item.get('published', ''), tz_name))}</time>
       </div>
       <h3><a href="{url}" target="_blank" rel="noopener">{esc(title)}</a></h3>

@@ -28,17 +28,20 @@ import requests
 log = logging.getLogger("ai")
 
 # 专业版提示词：双语 + 时间线 + 治疗方法，严格基于报道原文
-PROMPT_TEMPLATE = """你是一名资深疫情新闻编辑，擅长把外文疫情报道整理成专业的疫情简报。
+# 覆盖所有传染病：自动识别疾病名称，输出对应疾病的专业简报
+PROMPT_TEMPLATE = """你是一名资深疫情新闻编辑，擅长把外文传染病报道整理成专业的疫情简报。
 请阅读下面的新闻（标题+正文），输出 JSON（只输出 JSON，不要其他文字）：
 
 {{
-  "title_zh": "中文标题（25字以内，准确、专业，点明事件核心）",
-  "brief_zh": "一句话要点（40字以内，大白话，写清楚谁、在哪里、发生了什么，普通人一看就懂）",
-  "summary_zh": "完整中文摘要（250-350字）：交代事件背景、发生地点、关键数据（病例数/死亡数/时间）、涉及机构、当前进展。只写报道中明确提到的内容，不要推测，不要编造数据。",
-  "summary_en": "English summary (150-200 words): professional news-brief style. Cover what happened, where, key figures (cases/deaths/dates), parties involved, and current status. Based strictly on the reported facts, no speculation.",
+  "disease_zh": "疾病中文名（如：鼠疫、埃博拉、新冠、霍乱、登革热等；如报道未明确具体疾病，写'未明确'）",
+  "disease_en": "疾病英文名（如：Plague, Ebola, COVID-19 等；未明确写'Unknown'）",
+  "title_zh": "中文标题（25字以内，准确、专业，点明事件核心，需包含疾病名）",
+  "brief_zh": "一句话要点（40字以内，大白话，写清楚什么病、在哪里、发生了什么，普通人一看就懂）",
+  "summary_zh": "完整中文摘要（250-350字）：交代疾病名称、事件背景、发生地点、关键数据（病例数/死亡数/时间）、涉及机构、当前进展。只写报道中明确提到的内容，不要推测，不要编造数据。",
+  "summary_en": "English summary (150-200 words): professional news-brief style. Cover the disease name, what happened, where, key figures (cases/deaths/dates), parties involved, and current status. Based strictly on the reported facts, no speculation.",
   "timeline": ["时间线条目，按时间先后排列，最多6条。每条格式：日期（如报道明确）+ 事件；报道未明确日期的写'日期不详'+事件"],
-  "treatment": "治疗与防控措施（200字以内）：整理报道中提到的治疗方法、药物、疫苗、隔离与防控措施；如报道未提及，写'报道未提及具体治疗方法'",
-  "relevant": true/false（这篇报道是否与鼠疫或传染病疫情直接相关；仅提到"plague"等词但讲其他话题（如比喻、影视、虫害）则为 false）,
+  "treatment": "治疗与防控措施（200字以内）：整理报道中提到的针对该疾病的治疗方法、药物、疫苗、隔离与防控措施；如报道未提及，写'报道未提及具体治疗方法'",
+  "relevant": true/false（这篇报道是否与传染病疫情直接相关；仅提到疾病词但讲其他话题（如比喻、影视、虫害）则为 false）,
   "medical_advice": true/false（内容是否涉及治疗、预防方法或就医建议）
 }}
 
@@ -257,6 +260,8 @@ def _legacy_to_item(rec: dict, url: str) -> dict:
 def _make_record(item: dict, url: str, ai_out: dict) -> dict:
     """由 AI 输出组装标准记录。"""
     return {
+        "disease_zh": ai_out.get("disease_zh", "未明确"),
+        "disease_en": ai_out.get("disease_en", "Unknown"),
         "title_zh": ai_out["title_zh"] or item["title"],
         "brief_zh": ai_out.get("brief_zh", ""),
         "summary_zh": ai_out["summary_zh"],

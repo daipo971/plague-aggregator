@@ -32,8 +32,23 @@ log = logging.getLogger("fetch")
 ALLOWED_TYPES = {"official", "professional", "media", "unverified", "controversial"}
 
 # 相关性关键词：标题或摘要里必须至少出现一个，否则视为无关内容丢弃
+# 覆盖主要传染病 + 通用疫情词汇（多语言）
 RELEVANCE_RE = re.compile(
-    r"plague|pneumonic|bubonic|yersinia|鼠疫|耶尔森|瘟疫|peste|чума|pesta",
+    r"plague|pneumonic|bubonic|yersinia|鼠疫|耶尔森|瘟疫|peste|чума|pesta"  # 鼠疫
+    r"|ebola|marburg|埃博拉|马尔堡"  # 出血热
+    r"|covid|sars|mers|新冠|非典|中东呼吸综合征"  # 冠状病毒
+    r"|influenza|flu\b|h5n1|h1n1|禽流感|流感"  # 流感
+    r"|cholera|霍乱"  # 霍乱
+    r"|dengue|zika|chikungunya|登革|寨卡|基孔肯雅"  # 蚊媒
+    r"|malaria|疟疾"  # 疟疾
+    r"|tuberculosis|结核"  # 结核
+    r"|measles|麻疹"  # 麻疹
+    r"|mpox|monkeypox|猴痘"  # 猴痘
+    r"|nipah|hendra|尼帕|亨德拉"  # 尼帕
+    r"|lassa|拉沙热"  # 拉沙热
+    r"|yellow\s?fever|黄热病"  # 黄热病
+    r"|typhoid|伤寒"  # 伤寒
+    r"|outbreak|epidemic|pandemic|爆发|疫情|流行病|大流行|传染病|infectious\s?disease",
     re.IGNORECASE,
 )
 
