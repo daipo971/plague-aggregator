@@ -33,6 +33,7 @@ PROMPT_TEMPLATE = """你是一名资深疫情新闻编辑，擅长把外文疫�
 
 {{
   "title_zh": "中文标题（25字以内，准确、专业，点明事件核心）",
+  "brief_zh": "一句话要点（40字以内，大白话，写清楚谁、在哪里、发生了什么，普通人一看就懂）",
   "summary_zh": "完整中文摘要（250-350字）：交代事件背景、发生地点、关键数据（病例数/死亡数/时间）、涉及机构、当前进展。只写报道中明确提到的内容，不要推测，不要编造数据。",
   "summary_en": "English summary (150-200 words): professional news-brief style. Cover what happened, where, key figures (cases/deaths/dates), parties involved, and current status. Based strictly on the reported facts, no speculation.",
   "timeline": ["时间线条目，按时间先后排列，最多6条。每条格式：日期（如报道明确）+ 事件；报道未明确日期的写'日期不详'+事件"],
@@ -119,6 +120,7 @@ def _parse_result(content: str) -> dict | None:
     timeline = [str(t)[:150] for t in timeline[:6]]
     return {
         "title_zh": str(data.get("title_zh", ""))[:80],
+        "brief_zh": str(data.get("brief_zh", ""))[:80],
         "summary_zh": str(data.get("summary_zh", ""))[:600],
         "summary_en": str(data.get("summary_en", ""))[:900],
         "timeline": timeline,
@@ -219,6 +221,8 @@ def _empty_record(item: dict, url: str) -> dict:
     """降级记录：新字段给空值，保证页面渲染不报错。"""
     return {
         "title_zh": item["title"] or "(无标题)",
+        "brief_zh": "",
+        "retries": 0,
         "summary_zh": (item.get("summary_raw") or "暂无摘要")[:200],
         "summary_en": "",
         "timeline": [],
@@ -254,6 +258,7 @@ def _make_record(item: dict, url: str, ai_out: dict) -> dict:
     """由 AI 输出组装标准记录。"""
     return {
         "title_zh": ai_out["title_zh"] or item["title"],
+        "brief_zh": ai_out.get("brief_zh", ""),
         "summary_zh": ai_out["summary_zh"],
         "summary_en": ai_out["summary_en"],
         "timeline": ai_out["timeline"],
@@ -286,62 +291,77 @@ def _upgrade_one(item: dict, provider: AIProvider, ai_cache: dict) -> dict:
     return new_rec
 
 
+def _needs_retry(rec: dict) -> bool:
+    """未成功 AI 处理（原文直出）且重试次数未超限的记录，下次运行继续补跑。"""
+    return rec.get("ai_processed") is False and not _is_legacy(rec) and rec.get("retries", 0) < MAX_RETRIES
+
+
+MAX_RETRIES = 3
+
+
 def process_items(items: list, processed: dict, ai_cfg: dict) -> list:
     """
-    对新条目逐条处理：抓正文全文 -> 调 AI 生成专业简报。
-    另外用剩余预算把老格式缓存分批升级成专业版（每轮最多 max_per_run 次调用）。
+    对新条目逐条处理：抓正文全文 -> 调 AI 生成中文简报。
+    - 之前因预算用完或失败而未翻译的记录，优先补跑（最新的优先）
     - 已在 ai_cache 且为新格式的直接复用，不花钱
-    - 单条 AI 失败：新条目降级为原文直出；老记录保留原摘要
-    - 超过 max_per_run 的，剩下的下次运行继续
+    - 单条 AI 失败：记为原文直出并计入重试次数，之后仍会补跑，最多 MAX_RETRIES 次
+    - 每轮最多 max_per_run 次 AI 调用，剩下的下次运行继续
     """
     provider = get_provider(ai_cfg)
     ai_cache = processed.setdefault("ai_cache", {})
     max_per_run = ai_cfg.get("max_per_run", 30)
-
-    results = []
     ai_calls = 0
+
+    def translate(item: dict, url: str):
+        """调用 AI；成功返回记录，失败返回 None。"""
+        nonlocal ai_calls
+        ai_calls += 1
+        full_text = fetch_full_text(url) or item.get("summary_raw", "")
+        ai_out = provider.summarize(item["title"], full_text)
+        if ai_out is None:
+            log.warning("条目 AI 处理失败：%s", url)
+            return None
+        return _make_record(item, url, ai_out)
+
+    # 1) 补跑之前未翻译的记录（最新的优先）
+    if provider is not None:
+        pending = [(u, r) for u, r in ai_cache.items() if _needs_retry(r)]
+        pending.sort(key=lambda x: x[1].get("published", ""), reverse=True)
+        for url, rec in pending:
+            if ai_calls >= max_per_run:
+                break
+            new_rec = translate(_legacy_to_item(rec, url), url)
+            if new_rec is not None:
+                ai_cache[url] = new_rec
+            else:
+                rec["retries"] = rec.get("retries", 0) + 1
+
+    # 2) 处理本轮新条目
+    results = []
     for item in items:
         url = item["link"]
         if url in ai_cache:
             rec = ai_cache[url]
-            if not _is_legacy(rec):
-                results.append(rec)  # 新格式缓存，直接复用
-                continue
-            # 老格式缓存：走升级通道（计入预算）
-            if provider is None or ai_calls >= max_per_run:
+            if _is_legacy(rec) and provider is not None and ai_calls < max_per_run:
+                results.append(_upgrade_one(item, provider, ai_cache))
+                ai_calls += 1
+            else:
                 results.append(rec)
-                continue
-            ai_calls += 1
-            results.append(_upgrade_one(item, provider, ai_cache))
             continue
         if provider is None or ai_calls >= max_per_run:
-            # 没有 AI（或达到本轮上限）：降级为原文直出，保证页面不空
-            fallback = _empty_record(item, url)
-            ai_cache[url] = fallback
-            results.append(fallback)
+            rec = _empty_record(item, url)  # 预算用完：原文直出，下次补跑
+            ai_cache[url] = rec
+            results.append(rec)
             continue
-        ai_calls += 1
-        # 先抓正文全文，失败则用 RSS 摘要兜底
-        full_text = fetch_full_text(url) or item.get("summary_raw", "")
-        ai_out = provider.summarize(item["title"], full_text)
-        if ai_out is None:
-            log.warning("条目 AI 处理失败，已降级：%s", url)
-            fallback = _empty_record(item, url)
-            ai_cache[url] = fallback
-            results.append(fallback)
-            continue
-        record = _make_record(item, url, ai_out)
-        ai_cache[url] = record
-        results.append(record)
+        new_rec = translate(item, url)
+        if new_rec is None:
+            rec = _empty_record(item, url)
+            rec["retries"] = 1
+            ai_cache[url] = rec
+            results.append(rec)
+        else:
+            ai_cache[url] = new_rec
+            results.append(new_rec)
 
-    # 老记录升级扫尾：用剩余预算继续升级不在本轮新条目里的老记录
-    if provider is not None and ai_calls < max_per_run:
-        for url, rec in list(ai_cache.items()):
-            if ai_calls >= max_per_run:
-                break
-            if _is_legacy(rec):
-                ai_calls += 1
-                _upgrade_one(_legacy_to_item(rec, url), provider, ai_cache)
-
-    log.info("AI 处理完成：新调用 %d 次，共产出 %d 条", ai_calls, len(results))
+    log.info("AI 处理完成：本轮调用 %d 次，本轮新条目 %d 条", ai_calls, len(results))
     return results

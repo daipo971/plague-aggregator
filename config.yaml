@@ -19,7 +19,7 @@ site:
 ai:
   enabled: true               # 设为 false 则跳过 AI，直接用原文标题+截断摘要展示
   provider: "openai_compatible"   # 可选：openai_compatible / anthropic
-  max_per_run: 30             # 每次运行最多调用 AI 处理多少条新内容（控制费用）
+  max_per_run: 40             # 每次运行最多调用 AI 处理多少条新内容（控制费用）
   timeout: 60                 # 单次 AI 调用超时（秒）
 
 

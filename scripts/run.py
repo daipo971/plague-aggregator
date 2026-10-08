@@ -6,6 +6,7 @@ GitHub Actions 每 30 分钟运行一次这个文件。
 import json
 import logging
 import os
+import re
 import sys
 
 import yaml
@@ -24,6 +25,21 @@ logging.basicConfig(
 log = logging.getLogger("run")
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _dedupe(records: list) -> list:
+    """同一事件被多个信源转载时只保留最新一条（按标题去重，去掉末尾的媒体名）。"""
+    seen = set()
+    out = []
+    for rec in records:
+        title = rec.get("title_zh") or ""
+        title = re.sub(r"\s[-|–]\s[^-|–]{1,30}$", "", title)  # 去掉 " - AP News" 这类后缀
+        key = re.sub(r"[\W_]+", "", title.lower())[:30]
+        if key and key in seen:
+            continue
+        seen.add(key)
+        out.append(rec)
+    return out
 
 
 def main():
@@ -73,8 +89,12 @@ def main():
         seen_ids.add(item["id"])
     processed["seen_ids"] = list(seen_ids)[-5000:]  # 去重表只留最近 5000 个
 
-    all_records = list(processed.get("ai_cache", {}).values())
+    all_records = [
+        rec for rec in processed.get("ai_cache", {}).values()
+        if rec.get("relevant") is not False  # AI 判定与疫情无关的不展示
+    ]
     all_records.sort(key=lambda x: x.get("published", ""), reverse=True)
+    all_records = _dedupe(all_records)
     all_records = all_records[: site_cfg.get("max_items_total", 300)]
 
     # 5. 落盘 + 生成页面
