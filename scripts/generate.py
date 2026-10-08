@@ -19,7 +19,15 @@ COLUMNS = [
     ("official", "官方机构", "#1a73e8"),
     ("professional", "专业机构", "#0d8043"),
     ("media", "媒体报道", "#b06000"),
+    ("unverified", "未证实信息", "#7b1fa2"),
+    ("controversial", "争议说法", "#c62828"),
 ]
+
+# 这两个栏目的内容未经证实或存在争议，页面上要加醒目提示
+CAUTION_TYPES = {
+    "unverified": "以下内容来自社交平台或未经证实的渠道，尚未得到官方或权威媒体确认，仅供参考。",
+    "controversial": "以下内容属于争议说法或阴谋论，缺乏可靠证据，不代表本站观点。请勿据此改变就医或防疫行为。",
+}
 
 # 页面顶部固定医疗提示（通用公共卫生信息）
 HEALTH_BANNER = (
@@ -120,9 +128,14 @@ def render_page(items: list, cfg: dict, updated_at: str) -> str:
         if not cards:
             continue
         cards_html = "\n".join(render_card(i, tz_name) for i in cards)
+        caution = CAUTION_TYPES.get(key)
+        caution_html = (
+            f'<p class="caution">⚠️ {esc(caution)}</p>' if caution else ""
+        )
         sections.append(f"""
     <section>
       <h2><span class="dot" style="background:{color}"></span>{label}（{len(cards)}）</h2>
+      {caution_html}
       {cards_html}
     </section>""")
 
@@ -170,6 +183,8 @@ def render_page(items: list, cfg: dict, updated_at: str) -> str:
   .tr-title {{ font-weight: 700; margin-bottom: 6px; color: #065f46; }}
   .tr-sub {{ font-weight: 400; font-size: .75rem; color: #6b7280; }}
   .treatment p {{ margin: 0; color: #374151; }}
+  .caution {{ margin: 0 4px 10px; padding: 8px 12px; background: #fdecea; color: #611a15;
+           border-radius: 8px; font-size: .85rem; }}
   .en-block {{ margin: 10px 0; font-size: .82rem; color: #555; }}
   .en-block summary {{ cursor: pointer; color: #1a73e8; }}
   .en-block p {{ margin: 6px 0 0; padding: 8px 10px; background: #f8fafc; border-radius: 6px; }}

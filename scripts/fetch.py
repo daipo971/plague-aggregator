@@ -20,8 +20,11 @@ import yaml
 
 log = logging.getLogger("fetch")
 
-# 允许的信源类型（公开站点只收这三类）
-ALLOWED_TYPES = {"official", "professional", "media"}
+# 允许的信源类型
+# official / professional / media：主栏目
+# unverified：未证实（社交平台、匿名消息等），单独栏目
+# controversial：争议说法（阴谋论等），单独栏目
+ALLOWED_TYPES = {"official", "professional", "media", "unverified", "controversial"}
 
 
 def strip_html(text: str) -> str:

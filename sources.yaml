@@ -6,6 +6,8 @@
 #        official      官方机构（WHO、各国疾控等）
 #        professional  专业机构（CIDRAP、学术期刊等）
 #        media         正规媒体（Google 新闻关键词等）
+#        unverified    未证实（社交平台、匿名消息等），单独栏目展示
+#        controversial 争议说法 / 阴谋论，单独栏目展示，并加醒目提示
 #   3. enabled: false 的源会被跳过
 # ============================================================
 
@@ -86,3 +88,18 @@ sources:
   #   type: official
   #   rss: ""
   #   enabled: false
+
+
+  # ---------- 未证实（社交平台，单独栏目） ----------
+  # Telegram 公开频道没有 RSS，暂不接入
+  - name: "Reddit · plague outbreak（未证实）"
+    type: unverified
+    rss: "https://www.reddit.com/search.rss?q=plague+outbreak&sort=new"
+    enabled: true
+
+
+  # ---------- 争议说法（阴谋论，单独栏目） ----------
+  - name: "Reddit · plague conspiracy（争议）"
+    type: controversial
+    rss: "https://www.reddit.com/search.rss?q=plague+conspiracy&sort=new"
+    enabled: true
