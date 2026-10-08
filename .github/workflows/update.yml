@@ -58,4 +58,7 @@ jobs:
           git add data docs
           # 只有内容变化时才提交，避免空提交
           git diff --cached --quiet || git commit -m "自动更新：$(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push
+          # 先同步远端再推送：运行期间远端可能被其他提交推进，
+          # 直接 push 会被拒绝导致整轮 AI 翻译白跑；变基冲突则放弃本轮推送下轮重试
+          git pull --rebase origin main || { git rebase --abort; echo "变基冲突，跳过本轮推送（下轮重试）"; exit 0; }
+          git push || echo "推送失败，下轮重试"

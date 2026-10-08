@@ -161,6 +161,15 @@ class OpenAICompatibleProvider(AIProvider):
             resp.raise_for_status()
             content = resp.json()["choices"][0]["message"]["content"]
             return _parse_result(content)
+        except requests.exceptions.HTTPError as e:
+            # 把 API 返回的正文记下来（如 model 不存在、余额不足等），方便定位 400/401/429 的具体原因
+            body = ""
+            try:
+                body = (e.response.text or "")[:500]
+            except Exception:
+                pass
+            log.warning("AI 调用失败（openai_compatible）：%s | 接口返回：%s", e, body)
+            return None
         except Exception as e:  # noqa: BLE001 - 单条失败只记日志
             log.warning("AI 调用失败（openai_compatible）：%s", e)
             return None
@@ -194,6 +203,14 @@ class AnthropicProvider(AIProvider):
             resp.raise_for_status()
             content = resp.json()["content"][0]["text"]
             return _parse_result(content)
+        except requests.exceptions.HTTPError as e:
+            body = ""
+            try:
+                body = (e.response.text or "")[:500]
+            except Exception:
+                pass
+            log.warning("AI 调用失败（anthropic）：%s | 接口返回：%s", e, body)
+            return None
         except Exception as e:  # noqa: BLE001 - 单条失败只记日志
             log.warning("AI 调用失败（anthropic）：%s", e)
             return None
