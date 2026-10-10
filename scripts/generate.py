@@ -255,16 +255,24 @@ def render_overview(items: list, tz_name: str) -> str:
         f'<div class="stat"><b style="color:{color}">{counts[key]}</b><span>{label}</span></div>'
         for key, label, color, _ in COLUMNS
     )
-    # 疾病索引：按条数降序，只列已明确分类的疾病
+    # 疾病索引：列出全部主流传染病（有条目的按条数排前面，无条目的也列出）
+    try:
+        from disease_classifier import disease_list
+        all_diseases = disease_list()
+    except ImportError:
+        all_diseases = []
     dcounts = {}
     for item in items:
         dz = (item.get("disease_zh") or "").strip()
         if dz and dz != "未明确":
             dcounts[dz] = dcounts.get(dz, 0) + 1
-    dsorted = sorted(dcounts.items(), key=lambda x: -x[1])
+            if dz not in all_diseases:
+                all_diseases.append(dz)
+    order = {dz: i for i, dz in enumerate(all_diseases)}
+    dsorted = sorted(all_diseases, key=lambda dz: (-dcounts.get(dz, 0), order.get(dz, 999)))
     dchips = "".join(
-        f'<button class="dchip" data-disease="{esc(dz)}">\U0001F9A0 {esc(dz)}<b>{n}</b></button>'
-        for dz, n in dsorted
+        f'<button class="dchip" data-disease="{esc(dz)}">\U0001F9A0 {esc(dz)}<b>{dcounts.get(dz, 0)}</b></button>'
+        for dz in dsorted
     )
     disease_html = (
         "<h3>\U0001F9A0 疾病分类</h3>"
