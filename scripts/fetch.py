@@ -18,6 +18,7 @@ import logging
 import os
 import re
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlparse
 
 import feedparser
 import requests
@@ -63,6 +64,47 @@ RELEVANCE_RE = re.compile(
     r"| вспышка |эпидемия|épidémie|brote|epidemia",
     re.IGNORECASE,
 )
+
+
+# 中国大陆媒体黑名单（用户 2026-10-10 要求排除：中国新闻审查失真）
+# 命中任一即丢弃：RSS 链接域名、或 Google News 的 <source> 出版方名称/链接
+CN_DOMAIN_BLOCK = frozenset([
+    "xinhuanet.com", "news.cn", "people.com.cn", "cctv.com", "cctvplus.com",
+    "cgtn.com", "china.com.cn", "cri.cn", "chinadaily.com.cn", "globaltimes.cn",
+    "huanqiu.com", "chinanews.com.cn", "ecns.cn", "thepaper.cn", "gmw.cn",
+    "cyol.com", "workercn.cn", "sina.com.cn", "sina.cn", "sohu.com", "163.com",
+    "qq.com", "ifeng.com", "yicai.com", "stcn.com", "cs.com.cn",
+    "takungpao.com", "wenweipo.com", "caixin.com", "jfdaily.com",
+    "bjnews.com.cn", "nbd.com.cn",
+])
+CN_SOURCE_KEYWORDS = [
+    "新华", "人民网", "人民日报", "央视", "CCTV", "CGTN", "中国日报",
+    "China Daily", "环球时报", "环球网", "Global Times", "中新社",
+    "中国新闻网", "中新网", "China News Service", "澎湃", "光明网",
+    "光明日报", "中国青年报", "经济日报", "解放军报", "新京报",
+    "南方都市", "南方日报", "凤凰网", "新浪", "网易", "腾讯新闻",
+    "搜狐", "第一财经", "证券时报", "大公报", "文汇报", "财新",
+    "Xinhua", "People's Daily", "Shanghai Daily",
+]
+
+
+def _is_cn_media(link: str, source_el) -> bool:
+    """判断一条 RSS 条目是否来自中国大陆媒体（域名或出版方名称）。"""
+    try:
+        dom = urlparse(link or "").netloc.lower()
+    except Exception:
+        dom = ""
+    if dom and any(b in dom for b in CN_DOMAIN_BLOCK):
+        return True
+    blob = ""
+    if isinstance(source_el, dict):
+        blob = " ".join(str(v) for v in source_el.values())
+    elif source_el:
+        blob = str(source_el)
+    if not blob:
+        return False
+    bl = blob.lower()
+    return any(k.lower() in bl for k in CN_SOURCE_KEYWORDS)
 
 
 X_SEARCH_URL = "https://api.x.com/2/tweets/search/recent"
@@ -127,6 +169,8 @@ def fetch_rss(source: dict, max_items: int, cutoff: datetime) -> list:
                 continue  # 太旧的内容不要
         except Exception:
             pass
+        if _is_cn_media(link, entry.get("source")):
+            continue  # 中国大陆媒体，用户要求排除
         title = strip_html(entry.get("title", ""))
         summary = entry.get("summary", "") or entry.get("description", "")
         if not is_relevant(title, strip_html(summary)):

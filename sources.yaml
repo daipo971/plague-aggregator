@@ -12,6 +12,9 @@
 #   4. kind: x_search 表示 X（推特）搜索 API，需要在 GitHub Secrets 里配置 X_BEARER_TOKEN；
 #      没有配置时会自动跳过，不影响其他信源
 #   5. 所有信源都会按鼠疫相关关键词过滤，无关内容会被丢弃
+#   6. 政策（2026-10-10 用户要求）：排除中国大陆媒体（审查失真）。
+#      中文信源已删除；fetch.py 另有 CN_DOMAIN_BLOCK / CN_SOURCE_KEYWORDS
+#      黑名单，会过滤混入其他 Google 新闻查询结果的中国大陆媒体
 # ============================================================
 
 
@@ -49,6 +52,17 @@ sources:
     rss: "https://tools.cdc.gov/api/v2/resources/media/404952.rss"
     enabled: true
 
+  - name: "UKHSA · 英国卫生安全局"
+    type: official
+    rss: "https://www.gov.uk/government/organisations/uk-health-security-agency.atom"
+    enabled: true
+
+  - name: "WHO/CDC/ECDC/PAHO · 官方疫情通报"
+    type: official
+    rss: "https://news.google.com/rss/search?q=%28site%3Awho.int+OR+site%3Acdc.gov+OR+site%3Aecdc.europa.eu+OR+site%3Apaho.org%29+%28outbreak+OR+epidemic%29&hl=en-US&gl=US&ceid=US:en"
+    enabled: true
+
+
 
   # ---------- 媒体（Google 新闻关键词，多语言） ----------
   - name: "Google 新闻 · plague（英文）"
@@ -59,16 +73,6 @@ sources:
   - name: "Google 新闻 · disease outbreak（英文）"
     type: media
     rss: "https://news.google.com/rss/search?q=%22disease+outbreak%22+OR+%22epidemic%22&hl=en-US&gl=US&ceid=US:en"
-    enabled: true
-
-  - name: "Google 新闻 · 传染病疫情（中文）"
-    type: media
-    rss: "https://news.google.com/rss/search?q=%E4%BC%A0%E6%9F%93%E7%97%85%E7%96%AB%E6%83%85&hl=zh-CN&gl=CN&ceid=CN:zh"
-    enabled: true
-
-  - name: "Google 新闻 · 鼠疫（中文）"
-    type: media
-    rss: "https://news.google.com/rss/search?q=鼠疫&hl=zh-CN&gl=CN&ceid=CN:zh"
     enabled: true
 
   - name: "Google 新闻 · чума（俄文）"
@@ -89,11 +93,6 @@ sources:
   - name: "Bing 新闻 · plague（英文）"
     type: media
     rss: "https://www.bing.com/news/search?q=plague&format=rss"
-    enabled: true
-
-  - name: "Bing 新闻 · 鼠疫（中文）"
-    type: media
-    rss: "https://www.bing.com/news/search?q=%E9%BC%A0%E7%96%AB&format=rss"
     enabled: true
 
   - name: "Outbreak News Today · 疫情新闻"
