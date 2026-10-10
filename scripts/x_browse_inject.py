@@ -8,8 +8,10 @@ X 浏览采集注入：将从 X（推特）浏览搜集到的帖子注入为「�
     python scripts/x_browse_inject.py data/x_inbox.json
 
 输入 JSON（数组，每条）：
-    {"text": "帖子正文", "author": "用户名", "url": "https://x.com/.../status/...",
-     "published": "ISO 时间字符串"}
+    {"text": "帖子正文", "author": "X 用户名（可空，自动从 URL 提取）",
+     "url": "https://x.com/.../status/...", "published": "ISO 时间字符串",
+     "title": "中性中文标题", "detail": "详细中文解读（含说法/传播手法/背景）",
+     "timeline": ["日期 + 事件", ...], "disease_zh": "疾病中文名（可空，自动分类）"}
 
 处理：
 - 用 data/processed.json 的 seen_ids 去重（已收录的不再加入）
@@ -31,6 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fetch import clean_title, is_relevant, strip_html  # noqa: E402
 from generate import generate  # noqa: E402
+from disease_classifier import classify_disease  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
 log = logging.getLogger("x_browse_inject")
@@ -43,10 +46,20 @@ ALLOWED_SOURCE_TYPES = {"unverified", "controversial"}
 
 
 def _clean_title(text: str) -> str:
-    """清理标题：复用 fetch 逻辑，并额外去掉 @用户名（隐私匿名）。"""
+    """清理标题：复用 fetch 逻辑，保留 @用户名等人名信息。"""
     t = clean_title(text)
-    t = re.sub(r"@\w+", "", t)
     return re.sub(r"\s+", " ", t).strip(" -|·:：")
+
+
+def _extract_author(url: str, explicit: str = "") -> str:
+    """从 x.com/<handle>/status/... 提取作者；inbox 显式给的优先。"""
+    if (explicit or "").strip():
+        return explicit.strip().lstrip("@")
+    m = re.search(r"x\.com/([^/]+)/status", url or "", re.I)
+    if not m:
+        return ""
+    h = m.group(1)
+    return "" if h.lower() in ("i", "home", "search", "explore") else h
 
 
 def _bigrams(text: str) -> set:
@@ -103,16 +116,25 @@ def build_record(post: dict) -> dict | None:
     stype = post.get("source_type", DEFAULT_SOURCE_TYPE)
     if stype not in ALLOWED_SOURCE_TYPES:
         stype = DEFAULT_SOURCE_TYPE
-    # title 字段可由采集方直接提供中性标题（匿名）；否则从正文清理生成
+    # title 字段可由采集方直接提供中性标题；否则从正文清理生成
     title = (post.get("title") or "").strip() or _clean_title(text)
+    # timeline：采集方提供的时间线数组（"日期 + 事件"，按时间先后）
+    timeline = post.get("timeline") or []
+    if not isinstance(timeline, list):
+        timeline = []
+    timeline = [str(t)[:150] for t in timeline[:6]]
+    # 疾病分类：采集方指定优先，否则关键词自动分类
+    disease = (post.get("disease_zh") or "").strip() or classify_disease(title + " " + summary + " " + text)
     return {
         "title_zh": (title[:200] or "(无标题)"),
         "summary_zh": summary[:1200] or "暂无摘要",
         "summary_en": "",
-        "timeline": [],
+        "timeline": timeline,
         "treatment": "",
         "relevant": True,
         "url": link,
+        "author": _extract_author(link, post.get("author", "")),
+        "disease_zh": disease,
         "source_name": post.get("source_name", DEFAULT_SOURCE_NAME),
         "published": published,
         "source_type": stype,

@@ -25,6 +25,12 @@ import re
 
 import requests
 
+try:
+    from disease_classifier import classify_disease
+except ImportError:  # 独立运行时兜底
+    def classify_disease(text):
+        return "未明确"
+
 log = logging.getLogger("ai")
 
 # 专业版提示词：双语 + 时间线 + 治疗方法，严格基于报道原文
@@ -276,8 +282,13 @@ def _legacy_to_item(rec: dict, url: str) -> dict:
 
 def _make_record(item: dict, url: str, ai_out: dict) -> dict:
     """由 AI 输出组装标准记录。"""
+    disease = (ai_out.get("disease_zh") or "").strip()
+    if not disease or disease == "未明确":
+        # AI 没定下来时用关键词兜底
+        disease = classify_disease(
+            (ai_out.get("title_zh") or "") + " " + (ai_out.get("summary_zh") or ""))
     return {
-        "disease_zh": ai_out.get("disease_zh", "未明确"),
+        "disease_zh": disease or "未明确",
         "disease_en": ai_out.get("disease_en", "Unknown"),
         "title_zh": ai_out["title_zh"] or item["title"],
         "brief_zh": ai_out.get("brief_zh", ""),

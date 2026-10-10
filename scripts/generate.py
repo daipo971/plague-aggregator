@@ -122,6 +122,19 @@ COMMON_CSS = """
                 box-shadow: 0 1px 3px rgba(0,0,0,.08); }
   footer { text-align: center; font-size: .75rem; color: #999; padding: 20px; line-height: 1.8; }
   footer a { color: #1a73e8; }
+  .author { background: #f1f5f9; color: #475569; font-size: .7rem; padding: 2px 8px;
+            border-radius: 20px; margin-left: 6px; }
+  .dgrid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .dchip { border: 1px solid #cbd5e1; background: #fff; color: #334155; padding: 5px 12px;
+           border-radius: 20px; font-size: .8rem; cursor: pointer; }
+  .dchip b { color: #2e7d32; margin-left: 4px; }
+  .dchip.active { background: #2e7d32; border-color: #2e7d32; color: #fff; }
+  .dchip.active b { color: #fff; }
+  .drow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; align-items: center; }
+  .dlabel { font-size: .8rem; color: #666; }
+  .dbtn { border: 1px solid #bbf7d0; background: #f0fdf4; color: #166534; padding: 5px 12px;
+          border-radius: 20px; font-size: .8rem; cursor: pointer; }
+  .dbtn.active { background: #2e7d32; border-color: #2e7d32; color: #fff; }
 """
 
 
@@ -166,6 +179,8 @@ def render_card(item: dict, tz_name: str) -> str:
     disease = item.get("disease_zh", "")
     search_text = " ".join([title, brief, source, disease]).lower()
     disease_badge = f'<span class="disease-tag">🦠 {esc(disease)}</span>' if disease and disease != "未明确" else ""
+    author = (item.get("author") or "").strip()
+    author_badge = f'<span class="author">👤 @{esc(author)}</span>' if author else ""
 
     if item.get("manual"):
         status_badge = '<span class="ai-badge">✍️ 人工整理</span>'
@@ -212,7 +227,7 @@ def render_card(item: dict, tz_name: str) -> str:
     return f"""
     <article class="card" data-cat="{esc(item.get('source_type', ''))}" data-disease="{esc(disease)}" data-search="{esc(search_text)}">
       <div class="meta">
-        <span><span class="tag">{esc(source)}</span>{disease_badge}{status_badge}</span>
+        <span><span class="tag">{esc(source)}</span>{disease_badge}{author_badge}{status_badge}</span>
         <time>{esc(fmt_time(item.get('published', ''), tz_name))}</time>
       </div>
       <h3><a href="{url}" target="_blank" rel="noopener">{esc(title)}</a></h3>
@@ -240,6 +255,22 @@ def render_overview(items: list, tz_name: str) -> str:
         f'<div class="stat"><b style="color:{color}">{counts[key]}</b><span>{label}</span></div>'
         for key, label, color, _ in COLUMNS
     )
+    # 疾病索引：按条数降序，只列已明确分类的疾病
+    dcounts = {}
+    for item in items:
+        dz = (item.get("disease_zh") or "").strip()
+        if dz and dz != "未明确":
+            dcounts[dz] = dcounts.get(dz, 0) + 1
+    dsorted = sorted(dcounts.items(), key=lambda x: -x[1])
+    dchips = "".join(
+        f'<button class="dchip" data-disease="{esc(dz)}">\U0001F9A0 {esc(dz)}<b>{n}</b></button>'
+        for dz, n in dsorted
+    )
+    disease_html = (
+        "<h3>\U0001F9A0 疾病分类</h3>"
+        '<p class="intro">按疾病筛选浏览，点击进入：</p>'
+        f'<div class="dgrid">{dchips or "<span>暂无分类</span>"}</div>'
+    )
     # 最新要闻只放已经用中文整理好的条目，避免显示外文原标题
     translated = [i for i in items if i.get("ai_processed") and i.get("brief_zh")]
     latest = sorted(translated, key=lambda x: x.get("published", ""), reverse=True)[:5]
@@ -258,19 +289,30 @@ def render_overview(items: list, tz_name: str) -> str:
         <div class="stat total"><b>{len(items)}</b><span>总条数</span></div>
         {chips}
       </div>
+      {disease_html}
       <h3>最新要闻</h3>
       <ol class="latest">{latest_html or '<li>暂无内容</li>'}</ol>
     </section>"""
 
 
-def render_controls() -> str:
+def render_controls(items: list) -> str:
     buttons = ['<button class="fbtn active" data-filter="all">全部</button>']
     for key, label, _, _ in COLUMNS:
         buttons.append(f'<button class="fbtn" data-filter="{key}">{label}</button>')
+    dcounts = {}
+    for item in items:
+        dz = (item.get("disease_zh") or "").strip()
+        if dz and dz != "未明确":
+            dcounts[dz] = dcounts.get(dz, 0) + 1
+    dsorted = sorted(dcounts.items(), key=lambda x: -x[1])
+    dbuttons = ['<button class="dbtn active" data-dfilter="all">全部疾病</button>']
+    for dz, n in dsorted:
+        dbuttons.append(f'<button class="dbtn" data-dfilter="{esc(dz)}">{esc(dz)}({n})</button>')
     return f"""
-    <div class="controls">
+    <div class="controls" id="controls">
       <input id="q" type="search" placeholder="搜索关键词，例如：伊尔库茨克、俄罗斯、疫苗" aria-label="搜索">
       <div class="filters">{''.join(buttons)}</div>
+      <div class="drow"><span class="dlabel">\U0001F9A0 疾病：</span>{''.join(dbuttons)}</div>
       <p id="empty" class="empty" hidden>没有符合条件的内容。</p>
     </div>"""
 
@@ -299,15 +341,19 @@ FILTER_SCRIPT = """
 (function () {
   var q = document.getElementById('q');
   var btns = document.querySelectorAll('.fbtn');
+  var dbtns = document.querySelectorAll('.dbtn');
+  var dchips = document.querySelectorAll('.dchip');
   var cards = document.querySelectorAll('.card');
   var secs = document.querySelectorAll('section[data-section]');
   var empty = document.getElementById('empty');
   var cat = 'all';
+  var dis = 'all';
   function apply() {
     var kw = (q.value || '').trim().toLowerCase();
     var shown = 0;
     cards.forEach(function (c) {
       var ok = (cat === 'all' || c.dataset.cat === cat) &&
+               (dis === 'all' || c.dataset.disease === dis) &&
                (!kw || c.dataset.search.indexOf(kw) !== -1);
       c.hidden = !ok;
       if (ok) shown++;
@@ -317,11 +363,26 @@ FILTER_SCRIPT = """
     });
     empty.hidden = shown > 0;
   }
+  function setDisease(d) {
+    dis = d;
+    dbtns.forEach(function (x) { x.classList.toggle('active', x.dataset.dfilter === d); });
+    dchips.forEach(function (x) { x.classList.toggle('active', x.dataset.disease === d); });
+    apply();
+  }
   btns.forEach(function (b) {
     b.addEventListener('click', function () {
       cat = b.dataset.filter;
       btns.forEach(function (x) { x.classList.toggle('active', x === b); });
       apply();
+    });
+  });
+  dbtns.forEach(function (b) {
+    b.addEventListener('click', function () { setDisease(b.dataset.dfilter); });
+  });
+  dchips.forEach(function (ch) {
+    ch.addEventListener('click', function () {
+      setDisease(ch.dataset.disease);
+      document.getElementById('controls').scrollIntoView();
     });
   });
   q.addEventListener('input', apply);
@@ -355,7 +416,7 @@ def render_page(items: list, cfg: dict, updated_at: str) -> str:
 <div class="banner">💊 {esc(HEALTH_BANNER)}</div>
 <main>
 {render_overview(items, tz_name)}
-{render_controls()}
+{render_controls(items)}
 {render_sections(items, tz_name)}
 </main>
 <footer>
