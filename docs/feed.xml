@@ -4,7 +4,7 @@
 <title>全球传染病疫情信息聚合</title>
 <link>https://daipo971.github.io/plague-aggregator</link>
 <description>聚合 WHO、CDC、CIDRAP 等官方与专业信源的传染病疫情动态，含 AI 整理的疾病介绍、治疗与防控信息</description>
-<lastBuildDate>Sun, 18 Oct 2026 22:50:42 +0000</lastBuildDate>
+<lastBuildDate>Mon, 19 Oct 2026 00:50:07 +0000</lastBuildDate>
 <item>
 <title>俄罗斯鼠疫疫情：信息缺失令人担忧</title>
 <link>https://news.google.com/rss/articles/CBMi1wFBVV95cUxPb3FmV0h4MDBOZnFUVE5BQlRzQWxVV1ZWbzI5RXBGUnE0UXZMOVhTV1hRSXI5LTZfLUlGU042cWtILWtNMmNPdk1rN1hpMVFqamZ2SXItVUkzLXZtYW9Ma3lzM2YtbGdLWXY0TC1EYzZsd2xHXzRXVWlpQmROSmtNcVNvTG5rOUx5VFQ1M2I0b3ZuSXBCbXYwSnZCY0ljb05SY041VE1UMmxERXBIZHRZd3pkaUNKSlplVTF5eVU5TWhwSlFsQXQwblBKQ3FNWUtzbDExWS1tOA?oc=5</link>
@@ -41,6 +41,12 @@
 <guid>https://news.google.com/rss/articles/CBMiqgFBVV95cUxNLUcxSGR6cVgtalZwTmZKeVBGdC1nWVQ0UExqcDRTa2hpYmVkbmk1aGdHaXBhaUlscmZTb0x3U3hzZUlIbGNMOU96MDhTSTV6OEhwTGhJSkd1czdWd1V4bmJGdlVWNjFDUUlXQWVZQ3hmSDdvN1UzN0Y4MTRLMkdlNTR4Z2xzeG5jN3VUcmdaMkpUVlJsWXBqN2tNZnBLS3NtUTExV3ozMFpsd9IBvgFBVV95cUxON2k4WUN4T2NBTHJhLURBdEVGaDFaY3JocDZPeDVMejFqVlhqbjdSTk5Qbm1TNDBSZk5wY09iX29lOXh2OXBMY1hIbm11cFE5WDJmajVCNWxqMzgxa19YR3ZBa29KSTFyd1NXU0M2X2JqMEptRGRYZzBCTlNzenFHUEJyc1poTzZUZU9EQ3RzR0taMXQ0NUdBWTRBRGFCeFc2Ni1PelhGcVF5TzRBSTZSSHFPOEtGSVE2QXVSVTZ3?oc=5</guid>
 <pubDate>2026-10-18T04:00:39+00:00</pubDate>
 <description>西伯利亚出现零新冠相关警报，具体情况不明（来源：Google 新闻 · peste（西语））</description>
+</item><item>
+<title>结核病基因组监测新工具问世</title>
+<link>https://wwwnc.cdc.gov/eid/article/32/11/26-1074_article</link>
+<guid>https://wwwnc.cdc.gov/eid/article/32/11/26-1074_article</guid>
+<pubDate>2026-10-18T04:00:00+00:00</pubDate>
+<description>结核病基因组监测工具Pathotypr开发成功，可提高分类准确性并检测耐药性（来源：CDC《新发传染病》期刊 EID）</description>
 </item><item>
 <title>所谓“马达加斯加鼠疫死亡 40 人”是 2014 年 BBC 旧闻被翻新传播</title>
 <link>https://bbcinsight.pages.dev/news/world-africa-30152979</link>
@@ -299,12 +305,6 @@
 <guid>https://news.google.com/rss/articles/CBMilgFBVV95cUxOanh4V3pNQS1UZExCamVnRWU4WkpDeUZTRHNXbXpLdGIyUXUtSkZSdDNCLURUcngwUFBQM2FrOHJkMHlvMVI2SGp4aXFfXzlWWjRLZE9UT2lCTDJkVmxzOTN4Uzk0Zm44amxNVUtYR2E2MVpVS1RGal9pWVk0eHU2d0U0bTZscnJpekxwTHFKRFZIdlRsclE?oc=5</guid>
 <pubDate>2026-10-16T08:40:01+00:00</pubDate>
 <description>西伯利亚出现鼠疫疑似病例，当地卫生部门正在调查（来源：Google 新闻 · peste（法语））</description>
-</item><item>
-<title>加泰罗尼亚野猪非洲猪瘟危机持续</title>
-<link>https://news.google.com/rss/articles/CBMiVkFVX3lxTFBmc2h5NGwyd3NxMVlLcjN0dGEtWDVYamZwT1ZfUVc1VXZpSklMeDZxbE5qbXZGRDJ3NDRNTW11dmo0WGpXVmZvLTdjbHllLTNaSVhaUWd30gFaQVVfeXFMTWYyejVhTUNaR3Z3YkVWY1o0bDlFUXR0NERXUWVUanBfVjRQbUtTYU5DWVBqSTVoNXFNdXltUXFPSm9TbXNWWVk4YzhQcnpRZWFFLXVDMnMtcVlR?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMiVkFVX3lxTFBmc2h5NGwyd3NxMVlLcjN0dGEtWDVYamZwT1ZfUVc1VXZpSklMeDZxbE5qbXZGRDJ3NDRNTW11dmo0WGpXVmZvLTdjbHllLTNaSVhaUWd30gFaQVVfeXFMTWYyejVhTUNaR3Z3YkVWY1o0bDlFUXR0NERXUWVUanBfVjRQbUtTYU5DWVBqSTVoNXFNdXltUXFPSm9TbXNWWVk4YzhQcnpRZWFFLXVDMnMtcVlR?oc=5</guid>
-<pubDate>2026-10-16T07:52:00+00:00</pubDate>
-<description>加泰罗尼亚野猪再发非洲猪瘟，危机持续（来源：Google 新闻 · peste（西语））</description>
 </item>
 </channel>
 </rss>
