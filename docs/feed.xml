@@ -4,8 +4,56 @@
 <title>全球传染病疫情信息聚合</title>
 <link>https://daipo971.github.io/plague-aggregator</link>
 <description>聚合 WHO、CDC、CIDRAP 等官方与专业信源的传染病疫情动态，含 AI 整理的疾病介绍、治疗与防控信息</description>
-<lastBuildDate>Wed, 28 Oct 2026 12:37:59 +0000</lastBuildDate>
+<lastBuildDate>Wed, 28 Oct 2026 15:34:33 +0000</lastBuildDate>
 <item>
+<title>禽流感管理指南更新</title>
+<link>https://www.gov.uk/government/publications/avian-influenza-managing-human-exposures-and-sporadic-cases</link>
+<guid>https://www.gov.uk/government/publications/avian-influenza-managing-human-exposures-and-sporadic-cases</guid>
+<pubDate>2026-10-28T14:20:35+00:00</pubDate>
+<description>英国更新禽流感暴露病例和零星人类病例管理指南（来源：UKHSA · 英国卫生安全局）</description>
+</item><item>
+<title>西伯利亚疑似鼠疫调查</title>
+<link>https://news.google.com/rss/articles/CBMilwFBVV95cUxQdkVkaGh5YS1DS2QtMnhGRjBLVGh0TDJRXzkwbWNBTkNsNHd4WXpHQk5YSGQwSnNsRmItVFZBNm5vSU5wMXRPaDg5VDB5QXA4bUFHby1PVVlSdVd2WFQzWUxfUnlGdmRSb2JhWHh4TVZFNU1zWDc4aDJ5b0ZZYV8tQjVvRlJXVDc3SzFGRGxHYkhSNzR2RW5J?oc=5</link>
+<guid>https://news.google.com/rss/articles/CBMilwFBVV95cUxQdkVkaGh5YS1DS2QtMnhGRjBLVGh0TDJRXzkwbWNBTkNsNHd4WXpHQk5YSGQwSnNsRmItVFZBNm5vSU5wMXRPaDg5VDB5QXA4bUFHby1PVVlSdVd2WFQzWUxfUnlGdmRSb2JhWHh4TVZFNU1zWDc4aDJ5b0ZZYV8tQjVvRlJXVDc3SzFGRGxHYkhSNzR2RW5J?oc=5</guid>
+<pubDate>2026-10-28T13:34:12+00:00</pubDate>
+<description>西伯利亚出现疑似鼠疫病例，当地媒体展开调查（来源：Google 新闻 · peste（法语））</description>
+</item><item>
+<title>加泰罗尼亚抗击非洲猪瘟11个月</title>
+<link>https://news.google.com/rss/articles/CBMikAJBVV95cUxOYjVUTmh0aWZncjRpQmxSZFV6WHdGVzl6NWdwX3JJZGtaY3ZicHJQbXNoOWhKbGoyNmZOU3lKTDA3WEQzSTVzb0V4QkZ2eV9pcTFuenpHTEpUWHZuVkNac1hmbTM4YkM3STRoRUo5SHNORlBaNmNfZlRjOHg1S2o1MTdiVGxZcGROOC1rNjYtM2lRWlhSNGRtblVJWWJKQ2dPcnN0bVNOVXlxVnRueTJIYkwtcG5qUEtvbE9RWlpoeWZrejQ4al9jdEdRVlVMTGQyVTVRcC1oYjUxNkYtdFFTXzBPbk40Z2NlbWV3bEtJNXpsbHVGbFpLZkQzTUFqdmNiZTFnUjVZNHBOM0FaZk1sQdIBqwJBVV95cUxNX1UtejNvUzBBSEg5eHZZM2lISUx1bk1IWnprUVJxZWw0TE1yRFZQaU5tYlpwMzFWRWFrc0FhREtjN0VDY2hkZW1qSjBNMGxfNnV2bzJwTExpQktPV1FmVGNuRnFLUy1FVXpEQUI4NllJQkRSZ25lMFhiVG1DYy1DYm5rRVY5cVNOWkRlZ2lIeVlPWkVTUk50NVFvMkc2ZWZmOVpYVkF0Qkc0VU5lZm9FcnNhbW01VkJCZmI3QVZDM3U2STVVR2xzVHhTblhLSjNhT1l2N2RKZkp5YmI3cmpuS0VPcHQyY0dNYW5wS0pvUEVsZUdwVG90UDd1V2F4OHdnUlZFNkdtQU5UR25zdjI4SWZJOXBkcG4xMTZqWU51RDRHN25FODJzYjJBZw?oc=5</link>
+<guid>https://news.google.com/rss/articles/CBMikAJBVV95cUxOYjVUTmh0aWZncjRpQmxSZFV6WHdGVzl6NWdwX3JJZGtaY3ZicHJQbXNoOWhKbGoyNmZOU3lKTDA3WEQzSTVzb0V4QkZ2eV9pcTFuenpHTEpUWHZuVkNac1hmbTM4YkM3STRoRUo5SHNORlBaNmNfZlRjOHg1S2o1MTdiVGxZcGROOC1rNjYtM2lRWlhSNGRtblVJWWJKQ2dPcnN0bVNOVXlxVnRueTJIYkwtcG5qUEtvbE9RWlpoeWZrejQ4al9jdEdRVlVMTGQyVTVRcC1oYjUxNkYtdFFTXzBPbk40Z2NlbWV3bEtJNXpsbHVGbFpLZkQzTUFqdmNiZTFnUjVZNHBOM0FaZk1sQdIBqwJBVV95cUxNX1UtejNvUzBBSEg5eHZZM2lISUx1bk1IWnprUVJxZWw0TE1yRFZQaU5tYlpwMzFWRWFrc0FhREtjN0VDY2hkZW1qSjBNMGxfNnV2bzJwTExpQktPV1FmVGNuRnFLUy1FVXpEQUI4NllJQkRSZ25lMFhiVG1DYy1DYm5rRVY5cVNOWkRlZ2lIeVlPWkVTUk50NVFvMkc2ZWZmOVpYVkF0Qkc0VU5lZm9FcnNhbW01VkJCZmI3QVZDM3U2STVVR2xzVHhTblhLSjNhT1l2N2RKZkp5YmI3cmpuS0VPcHQyY0dNYW5wS0pvUEVsZUdwVG90UDd1V2F4OHdnUlZFNkdtQU5UR25zdjI4SWZJOXBkcG4xMTZqWU51RDRHN25FODJzYjJBZw?oc=5</guid>
+<pubDate>2026-10-28T12:16:42+00:00</pubDate>
+<description>加泰罗尼亚地区非洲猪瘟持续11个月，野猪数量减至约100头（来源：Google 新闻 · peste（西语））</description>
+</item><item>
+<title>America waged war on drunk driving. Now, a new epidemic is taking hold - San Francisco Chronicle</title>
+<link>https://news.google.com/rss/articles/CBMidkFVX3lxTE1rREVzS0o5LXFmUFliQldpdzlyRExyMWx0YndieVVXbUxpX3h1SWgzdTl2R29MdXJlekU0ak95RWE1V1ZCNXRLc19CRElfSHVRZDRGTmZSN2I2c2VnS3AzZGlvU2NsTEhKNXR3QzBjcnhGX1JUMGc?oc=5</link>
+<guid>https://news.google.com/rss/articles/CBMidkFVX3lxTE1rREVzS0o5LXFmUFliQldpdzlyRExyMWx0YndieVVXbUxpX3h1SWgzdTl2R29MdXJlekU0ak95RWE1V1ZCNXRLc19CRElfSHVRZDRGTmZSN2I2c2VnS3AzZGlvU2NsTEhKNXR3QzBjcnhGX1JUMGc?oc=5</guid>
+<pubDate>2026-10-28T11:00:00+00:00</pubDate>
+<description>America waged war on drunk driving. Now, a new epidemic is t…（来源：Google 新闻 · disease outbreak（英文））</description>
+</item><item>
+<title>Opinion: How pediatricians like me are helping families stay calm and informed about measles</title>
+<link>https://www.statnews.com/2026/10/28/measles-parents-panic-pennsylvania-vaccines-education/?utm_campaign=rss</link>
+<guid>https://www.statnews.com/2026/10/28/measles-parents-panic-pennsylvania-vaccines-education/?utm_campaign=rss</guid>
+<pubDate>2026-10-28T08:30:00+00:00</pubDate>
+<description>“It is dizzying to have a family clamoring for the MMR vacci…（来源：STAT News · 卫生新闻）</description>
+</item><item>
+<title>俄罗斯27地区爆发大规模HIV疫情</title>
+<link>https://news.google.com/rss/articles/CBMickFVX3lxTFBEVFd4dGdONWhkaHFnNkxWUk9vQVVBM192eGhUdUQ1azlOU0F1UzFSTHl5ZFUySmpXMUtvaTUyNGt2Tk8xSjV0aXR4YkQ0RnFueW1mWE5CU3ZOeml3TGY4YVJuY1cxSTViMVptdWhwa2dEdw?oc=5</link>
+<guid>https://news.google.com/rss/articles/CBMickFVX3lxTFBEVFd4dGdONWhkaHFnNkxWUk9vQVVBM192eGhUdUQ1azlOU0F1UzFSTHl5ZFUySmpXMUtvaTUyNGt2Tk8xSjV0aXR4YkQ0RnFueW1mWE5CU3ZOeml3TGY4YVJuY1cxSTViMVptdWhwa2dEdw?oc=5</guid>
+<pubDate>2026-10-28T08:20:28+00:00</pubDate>
+<description>俄罗斯27地区记录大规模HIV疫情（来源：Google 新闻 · disease outbreak（英文））</description>
+</item><item>
+<title>"Longer, more intensive training camps, please" – Eddie Johnson urges NBA to act amid injury epidemic - Basketball Network</title>
+<link>https://news.google.com/rss/articles/CBMingFBVV95cUxOMm44dU9vZFR1Z2otYWp1QXhFbDBnUEZLNThUM3NVUWxhUUdhM0thZzJvWUlEWkJaZDFzLVQ0OXhyM0xkaHF2aDNuam93RkM2T1pWNmNCbXo4U00tZnAzY2pPOXJlSTViZlJyM2JIeVpDaGozaGIwTUZqWl9xb3NNekE2WmlUOHdEYUpIQlZrN1JYTUF4ZWhyS2RjWFhnZw?oc=5</link>
+<guid>https://news.google.com/rss/articles/CBMingFBVV95cUxOMm44dU9vZFR1Z2otYWp1QXhFbDBnUEZLNThUM3NVUWxhUUdhM0thZzJvWUlEWkJaZDFzLVQ0OXhyM0xkaHF2aDNuam93RkM2T1pWNmNCbXo4U00tZnAzY2pPOXJlSTViZlJyM2JIeVpDaGozaGIwTUZqWl9xb3NNekE2WmlUOHdEYUpIQlZrN1JYTUF4ZWhyS2RjWFhnZw?oc=5</guid>
+<pubDate>2026-10-28T08:06:00+00:00</pubDate>
+<description>"Longer, more intensive training camps, please" – Eddie John…（来源：Google 新闻 · disease outbreak（英文））</description>
+</item><item>
+<title>« Bandantes », « moches », « peste noire » : à Assas, des étudiants ciblés par des listes racistes et sexistes - L'Humanité</title>
+<link>https://news.google.com/rss/articles/CBMi2AFBVV95cUxNR1dtRllIMmZTWjlyeEprTjJweGJlQy1FLUFZTmtnQ3dUNXBXdW04aFZJSUVaaVdrUEUyS1BQbHpHWGRPX2pXYmRuSmxLTFFsS2NfOU5wVFEtQXIwbzRXelZIQXlGM0cybEVVeEc5WTFwQWxBWG4yYVBaeEoxYzV0RWVvcTNIdjlBT016eXpnbnByZkJVeWt2YzNQdXA1YnBBU0FoZWljS0hYbFNja2JmdmlIbHhkZjVkM00wQUZORWlQSkt5dFE3elZLS25sN04xT3FpWGJrejQ?oc=5</link>
+<guid>https://news.google.com/rss/articles/CBMi2AFBVV95cUxNR1dtRllIMmZTWjlyeEprTjJweGJlQy1FLUFZTmtnQ3dUNXBXdW04aFZJSUVaaVdrUEUyS1BQbHpHWGRPX2pXYmRuSmxLTFFsS2NfOU5wVFEtQXIwbzRXelZIQXlGM0cybEVVeEc5WTFwQWxBWG4yYVBaeEoxYzV0RWVvcTNIdjlBT016eXpnbnByZkJVeWt2YzNQdXA1YnBBU0FoZWljS0hYbFNja2JmdmlIbHhkZjVkM00wQUZORWlQSkt5dFE3elZLS25sN04xT3FpWGJrejQ?oc=5</guid>
+<pubDate>2026-10-28T08:00:00+00:00</pubDate>
+<description>« Bandantes », « moches », « peste noire » : à Assas, des ét…（来源：Google 新闻 · peste（法语））</description>
+</item><item>
 <title>Russia’s Plague Scare: Challenges to Biosecurity Governance - orfonline.org</title>
 <link>https://news.google.com/rss/articles/CBMingFBVV95cUxOajhWSzB0RnQ2eExHOWxJcG0wdjZkVm85ZUc0dHRhWHJmeGJZbUpoRnNmVDVUNUN4MkpZaHZ0bDU2cUZJeDNOUk1DOTBsOU1lQzRpRmhpcVNLakRuanhtSUw0bXJSbW9pZW40MF9VSmtUbHBwaGIwdFpjWjNXV21ySGk2Zk0xdmgyc1NHbXYzWmVnVjhTczNtZXplQ2Rhdw?oc=5</link>
 <guid>https://news.google.com/rss/articles/CBMingFBVV95cUxOajhWSzB0RnQ2eExHOWxJcG0wdjZkVm85ZUc0dHRhWHJmeGJZbUpoRnNmVDVUNUN4MkpZaHZ0bDU2cUZJeDNOUk1DOTBsOU1lQzRpRmhpcVNLakRuanhtSUw0bXJSbW9pZW40MF9VSmtUbHBwaGIwdFpjWjNXV21ySGk2Zk0xdmgyc1NHbXYzWmVnVjhTczNtZXplQ2Rhdw?oc=5</guid>
@@ -18,11 +66,11 @@
 <pubDate>2026-10-28T02:52:56+00:00</pubDate>
 <description>Doctors, police call e-bike injuries an epidemic as Metro De…（来源：Google 新闻 · disease outbreak（英文））</description>
 </item><item>
-<title>HIV Has Reached ‘Epidemic Proportions’ In A Third Of Russia’s Federal Subjects – OpEd - Eurasia Review</title>
+<title>俄罗斯三分之一地区HIV达流行水平</title>
 <link>https://news.google.com/rss/articles/CBMivAFBVV95cUxOUGJqRF95cHZfR0FaUlVQV0NoSnptNTg1M3FGM0Q5Q05RX1dlNk14R1QwUGZ6ODg2NjNOenRyZWZmRzg2Qm1HUFEyN0xYNnM2R09HMGhhT2J5ZDFTaVRpX3dkcU83SmxUMGQzN1hBTlFDRG5LZ2VYTmJlRjNWRDdJYlBiRmJ6MnNpM1c1cG9ZVllwUEI2T0IwY3I4MW5FQ3hJMk9YTkk4VUZOUEgyNzlvdUxoOU9KUmNkLWFBUg?oc=5</link>
 <guid>https://news.google.com/rss/articles/CBMivAFBVV95cUxOUGJqRF95cHZfR0FaUlVQV0NoSnptNTg1M3FGM0Q5Q05RX1dlNk14R1QwUGZ6ODg2NjNOenRyZWZmRzg2Qm1HUFEyN0xYNnM2R09HMGhhT2J5ZDFTaVRpX3dkcU83SmxUMGQzN1hBTlFDRG5LZ2VYTmJlRjNWRDdJYlBiRmJ6MnNpM1c1cG9ZVllwUEI2T0IwY3I4MW5FQ3hJMk9YTkk4VUZOUEgyNzlvdUxoOU9KUmNkLWFBUg?oc=5</guid>
 <pubDate>2026-10-28T01:33:52+00:00</pubDate>
-<description>HIV Has Reached ‘Epidemic Proportions’ In A Third Of Russia’…（来源：Google 新闻 · disease outbreak（英文））</description>
+<description>俄罗斯三分之一联邦主体HIV感染率达流行水平（来源：Google 新闻 · disease outbreak（英文））</description>
 </item><item>
 <title>法国将播鼠疫专题节目</title>
 <link>https://news.google.com/rss/articles/CBMidkFVX3lxTFBRUHpJNlZKWHUzdWpsMDR5NEZwQWEzLUU4ckVjWTNFVnZyQkxEcVZzZ0ZqaGgzSkc3RTZDYU5kcF9vRHZ6amlsSkhvdl95b1QzMUY4OUxQcjFZeDUybzJic3VIUk1jY0pVRHpuYS1NR2duNDljNWc?oc=5</link>
@@ -83,6 +131,12 @@
 <guid>http://www.bing.com/news/apiclick.aspx?ref=FexRss&amp;aid=&amp;tid=6ae1acf54c694d7c996d201025a8852d&amp;url=https%3a%2f%2fwww.msn.com%2fen-us%2fnews%2fother%2frussian-plague-lab-death-3-lessons-from-the-history-of-lab-accidents%2far-AA2gaU0w&amp;c=13179822273444891923&amp;mkt=en-us</guid>
 <pubDate>2026-10-27T07:59:01+00:00</pubDate>
 <description>俄罗斯发生鼠疫实验室死亡事故（来源：Bing 新闻 · plague（英文））</description>
+</item><item>
+<title>Russian plague lab death: 3 lessons from the history of lab accidents</title>
+<link>http://www.bing.com/news/apiclick.aspx?ref=FexRss&amp;aid=&amp;tid=6ae212036fbf435d872c18bc552a0ce6&amp;url=https%3a%2f%2fwww.msn.com%2fen-us%2fnews%2fother%2frussian-plague-lab-death-3-lessons-from-the-history-of-lab-accidents%2far-AA2gaU0w&amp;c=13179822273444891923&amp;mkt=en-us</link>
+<guid>http://www.bing.com/news/apiclick.aspx?ref=FexRss&amp;aid=&amp;tid=6ae212036fbf435d872c18bc552a0ce6&amp;url=https%3a%2f%2fwww.msn.com%2fen-us%2fnews%2fother%2frussian-plague-lab-death-3-lessons-from-the-history-of-lab-accidents%2far-AA2gaU0w&amp;c=13179822273444891923&amp;mkt=en-us</guid>
+<pubDate>2026-10-27T07:59:01+00:00</pubDate>
+<description>Russian authorities dispute reports that pneumonic plague an…（来源：Bing 新闻 · plague（英文））</description>
 </item><item>
 <title>古巴哈瓦那奥罗普切热疫情爆发</title>
 <link>https://wwwnc.cdc.gov/eid/article/32/12/25-1334_article</link>
@@ -251,60 +305,6 @@
 <guid>https://www.gov.uk/government/statistics/announcements/national-flu-and-covid-19-surveillance-report-week-44-report-data-to-week-43-data-up-to-25-october-2026</guid>
 <pubDate>2026-10-26T09:39:23+00:00</pubDate>
 <description>National influenza and COVID-19 report, monitoring COVID-19 …（来源：UKHSA · 英国卫生安全局）</description>
-</item><item>
-<title>Are Boy Bands the Cure for the Male Loneliness Epidemic? - Literary Hub</title>
-<link>https://news.google.com/rss/articles/CBMigAFBVV95cUxNTE05S0ZPV3VkSjlsbExZbmpUU1hsZXlrWkcwZ0I5bFdoSkJLVHBRSXJrZldkbVlsaENzUlNKTDJhUUlVc0RmY3JsODdEcXlBOFNwMGhjc1RaOW1hWGc5TEtrRVRFb0xKVkxaN2NHbmZQaGoyUDlGR05JSmJYdTBfbg?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMigAFBVV95cUxNTE05S0ZPV3VkSjlsbExZbmpUU1hsZXlrWkcwZ0I5bFdoSkJLVHBRSXJrZldkbVlsaENzUlNKTDJhUUlVc0RmY3JsODdEcXlBOFNwMGhjc1RaOW1hWGc5TEtrRVRFb0xKVkxaN2NHbmZQaGoyUDlGR05JSmJYdTBfbg?oc=5</guid>
-<pubDate>2026-10-26T09:02:30+00:00</pubDate>
-<description>Are Boy Bands the Cure for the Male Loneliness Epidemic? Lit…（来源：Google 新闻 · disease outbreak（英文））</description>
-</item><item>
-<title>La déforestation de l’Amazonie atteint son plus bas niveau historique - La Relève et La Peste</title>
-<link>https://news.google.com/rss/articles/CBMinwFBVV95cUxQVkNzNFRMT3pXZGM2NzVVQk83RHdJV0x5MUhYYmNsUjJHNEZLZy1FQ0w4M245MXlSTzdoQWVKMGlkV1Bqb2NvSGFMUnNoWjB3NGFJNmgzRU1sTkszcldZRFBwN1FCT0F5SHhpdWhOWTU4WVRRTEtDdEZLRk5OMHhKM1VOVC01aTlPN1g3cExoS3gxTktBM2FsWE9EaUlSSFk?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMinwFBVV95cUxQVkNzNFRMT3pXZGM2NzVVQk83RHdJV0x5MUhYYmNsUjJHNEZLZy1FQ0w4M245MXlSTzdoQWVKMGlkV1Bqb2NvSGFMUnNoWjB3NGFJNmgzRU1sTkszcldZRFBwN1FCT0F5SHhpdWhOWTU4WVRRTEtDdEZLRk5OMHhKM1VOVC01aTlPN1g3cExoS3gxTktBM2FsWE9EaUlSSFk?oc=5</guid>
-<pubDate>2026-10-26T08:53:11+00:00</pubDate>
-<description>La déforestation de l’Amazonie atteint son plus bas niveau h…（来源：Google 新闻 · peste（法语））</description>
-</item><item>
-<title>Robin Monotti 稱雅各布森新書預言西伯利亞鼠疫實驗室事故</title>
-<link>https://x.com/robinmonotti/status/2107144745902391520</link>
-<guid>https://x.com/robinmonotti/status/2107144745902391520</guid>
-<pubDate>2026-10-26T00:34:31.925978+00:00</pubDate>
-<description>【說法】@robinmonotti 稱安妮·雅各布森（Annie Jacobsen）2026年出版的《Biologica…（来源：X 推特 · plague 陰謀論（爭議））</description>
-</item><item>
-<title>Winston-Salem居民关注孤独问题</title>
-<link>https://news.google.com/rss/articles/CBMirAFBVV95cUxObE9TYjVHX0IyNG12dXJtdzd0cjZfOXlwV2N5WkdlS2JRd2lkdlh5bm52UHRrbmdFS0o0N2ZGM1ZHV2NabHFRQjhESk9HSDlLeDdVM01PZE9kbnlZb29EbTMtUlFSNlZSNm1fcHFWTTlWT0d2bmRPeGxnRndfYTV3Nlk1Z19TWFlFRGtFVEdYNzNsdjk3bnVlaDhmWDVHTE9zc0RsbTRYdWJmNlY5?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMirAFBVV95cUxObE9TYjVHX0IyNG12dXJtdzd0cjZfOXlwV2N5WkdlS2JRd2lkdlh5bm52UHRrbmdFS0o0N2ZGM1ZHV2NabHFRQjhESk9HSDlLeDdVM01PZE9kbnlZb29EbTMtUlFSNlZSNm1fcHFWTTlWT0d2bmRPeGxnRndfYTV3Nlk1Z19TWFlFRGtFVEdYNzNsdjk3bnVlaDhmWDVHTE9zc0RsbTRYdWJmNlY5?oc=5</guid>
-<pubDate>2026-10-25T17:33:39+00:00</pubDate>
-<description>美国北卡罗来纳州Winston-Salem居民关注孤独问题（来源：Google 新闻 · disease outbreak（英文））</description>
-</item><item>
-<title>俄罗斯鼠疫风险与WHO协议延迟</title>
-<link>https://news.google.com/rss/articles/CBMiugFBVV95cUxOb1N4MXZ3ZmhvOWh2eXN4eWo3WWs3UDQ5cVF3cEd0TnA2MFRNU3l5eXVLZlBRMjBHRGVlUnlIai1HUjBOMC1QQktFMnJkNktKQjZqaHVJU1JKcGl6NVNTdTVkb3dOaEhsVWsyZ3NYZlAyaTk1bEp6RnJfdklrSGhIQVFCUGVFYkVCR1NMU0JUQ1VHZWh2cENNRVljR2x6M3VJckJld28zbFZFdkdsRjhOWE9JczFnWGtOSHc?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMiugFBVV95cUxOb1N4MXZ3ZmhvOWh2eXN4eWo3WWs3UDQ5cVF3cEd0TnA2MFRNU3l5eXVLZlBRMjBHRGVlUnlIai1HUjBOMC1QQktFMnJkNktKQjZqaHVJU1JKcGl6NVNTdTVkb3dOaEhsVWsyZ3NYZlAyaTk1bEp6RnJfdklrSGhIQVFCUGVFYkVCR1NMU0JUQ1VHZWh2cENNRVljR2x6M3VJckJld28zbFZFdkdsRjhOWE9JczFnWGtOSHc?oc=5</guid>
-<pubDate>2026-10-25T17:15:00+00:00</pubDate>
-<description>俄罗斯存在鼠疫风险，WHO流行病协议出现危险延迟（来源：Google 新闻 · plague（英文））</description>
-</item><item>
-<title>香港举办首届驱鼠疫轿子赛</title>
-<link>https://news.google.com/rss/articles/CBMiwwFBVV95cUxPVnBFUUdxT0dNM205YnVWTFcwMmphTnpIX1ViLU9qRGpuUGxqOEJJa3VaNUR2alZqRm9YRml4YXd6X0FsRjFXTjZJekFPRnpWVHFvT3MzNW9MdElVNHM5dHJQeTRma1Z6MDhJRVVWaWpma01jWDFxNzVXcUJvaUdybU5RRkdMMUlHRnhrYXVuRGxmaWswcDZLU0pZSmdOdWcxNnRDYklHckhYbEpaTUdOZ3B0cGlUSUN3RUVsc21DTXpybkU?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMiwwFBVV95cUxPVnBFUUdxT0dNM205YnVWTFcwMmphTnpIX1ViLU9qRGpuUGxqOEJJa3VaNUR2alZqRm9YRml4YXd6X0FsRjFXTjZJekFPRnpWVHFvT3MzNW9MdElVNHM5dHJQeTRma1Z6MDhJRVVWaWpma01jWDFxNzVXcUJvaUdybU5RRkdMMUlHRnhrYXVuRGxmaWswcDZLU0pZSmdOdWcxNnRDYklHckhYbEpaTUdOZ3B0cGlUSUN3RUVsc21DTXpybkU?oc=5</guid>
-<pubDate>2026-10-25T15:57:49+00:00</pubDate>
-<description>香港举办首届驱鼠疫轿子赛，复兴济公传说（来源：Google 新闻 · plague（英文））</description>
-</item><item>
-<title>匈牙利褐鼠疫爆发</title>
-<link>https://news.google.com/rss/articles/CBMijAFBVV95cUxNQ3VGUVBZNnROd25NOXNCNFAzV1ZCV1EwV01iZ0ZCQ2FFd1gyUjhPOWI5MzF6QTBOc0dwTE1KWHgzLXZ4aTdyQi1QczhlcHZLbW5OeDRkeDkxWFBtenBxZERmcXRtTS1qVjV5ZmFnTTdFeDUxdmZNaC1xWlhzeU5yeGJlNUx4Q055OHNZaQ?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMijAFBVV95cUxNQ3VGUVBZNnROd25NOXNCNFAzV1ZCV1EwV01iZ0ZCQ2FFd1gyUjhPOWI5MzF6QTBOc0dwTE1KWHgzLXZ4aTdyQi1QczhlcHZLbW5OeDRkeDkxWFBtenBxZERmcXRtTS1qVjV5ZmFnTTdFeDUxdmZNaC1xWlhzeU5yeGJlNUx4Q055OHNZaQ?oc=5</guid>
-<pubDate>2026-10-25T15:13:54+00:00</pubDate>
-<description>匈牙利爆发褐鼠疫疫情（来源：Google 新闻 · peste（法语））</description>
-</item><item>
-<title>加泰罗尼亚新增9例野猪非洲猪瘟病例</title>
-<link>https://news.google.com/rss/articles/CBMi2AFBVV95cUxNVW9YaHVXMVo0THlwaFVuYkpTZ3MtUEthVkJWSUNqVlVZNzVKZVVEc0VDbFN6Q3FBT3BTYTlPVVc1SlRfOS11OXF2a0ZPZF9CZFhNNnJzaGhnMll6c3ZtY2wxYXJjdDR6a25SVmdaREVwVEo4elIyaEp0alBJVXlfSUluTVlTRXdqZnRqRHBDNHU4S2tvLXpuSFl2c0I4Wm84MXdEUk9qZk42RTlBeUJab2h2SzJSYnNkYTNoT1RMdDBtT0tTbV9HUGdZTHBGMUFzOWhUdlkyMHc?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMi2AFBVV95cUxNVW9YaHVXMVo0THlwaFVuYkpTZ3MtUEthVkJWSUNqVlVZNzVKZVVEc0VDbFN6Q3FBT3BTYTlPVVc1SlRfOS11OXF2a0ZPZF9CZFhNNnJzaGhnMll6c3ZtY2wxYXJjdDR6a25SVmdaREVwVEo4elIyaEp0alBJVXlfSUluTVlTRXdqZnRqRHBDNHU4S2tvLXpuSFl2c0I4Wm84MXdEUk9qZk42RTlBeUJab2h2SzJSYnNkYTNoT1RMdDBtT0tTbV9HUGdZTHBGMUFzOWhUdlkyMHc?oc=5</guid>
-<pubDate>2026-10-25T05:00:00+00:00</pubDate>
-<description>加泰罗尼亚野猪中发现9例非洲猪瘟新病例（来源：Google 新闻 · peste（西语））</description>
-</item><item>
-<title>Cronistas de la peste: así se hicieron los grandes reportajes de ‘El País Semanal’ durante el confinamiento del coronavirus - EL PAÍS</title>
-<link>https://news.google.com/rss/articles/CBMi8AFBVV95cUxOUW5iZzY3enZKUW9La3FYbmtSY3MwRkZBaGFRSjFjMXpGQ2F6RTJmVktRXzNkX29wOTI3bjVkQm5aSFlIcHpvTDJfT0xPcFoyS29oNFBIV2dZWUhsVXVRRkppZ1FNSHQ2czN2QmxIUWdha1VXU25uenh6VU1uWkxleEdWSjJrSnhtVW1XbUljNlpOamdtNHdkTUpBOGtaS0lRUkFSVkFUdktTZTdNRVRQQm5wakdPdjlZRS1ZV3BDZTdpbWM2d3ZiRUZNalVFdGRhQTdEMjZKM3dpV0xlckFIVnROUF9kOUpxaFcxWmd6TmnSAYQCQVVfeXFMUC03cE41T3YzX3dqdXNOZFNtU05DQ2phNW1iWkVTLUJzMHF5TmJGT1daZ2dtbndTbzlyUnY4b1h4b3NuRldOV3dINVdiSFB0N1RhQklzcWZYS1IwRHl3NldqT1BkOUdhb3pkVGpjV0k0NHJQdXdwMjJBRWdRWEljU2VsNVlEdmE2aUVIOUFRVTh1M2FFZ0loMzU4ZjM5bU9Mc2FQVHhMTE5WSVBDTHNVQ1VXNW1IamNQM01pMUU3TExLbTdpelAzSW05ZTg3d1IxSFF1cDIxdDB4ZjdxWDByTVQyQUoxYVlvR2duY0UyeWs0OGgxNmM2SHFDNmtCcVJ1ZldYMWU?oc=5</link>
-<guid>https://news.google.com/rss/articles/CBMi8AFBVV95cUxOUW5iZzY3enZKUW9La3FYbmtSY3MwRkZBaGFRSjFjMXpGQ2F6RTJmVktRXzNkX29wOTI3bjVkQm5aSFlIcHpvTDJfT0xPcFoyS29oNFBIV2dZWUhsVXVRRkppZ1FNSHQ2czN2QmxIUWdha1VXU25uenh6VU1uWkxleEdWSjJrSnhtVW1XbUljNlpOamdtNHdkTUpBOGtaS0lRUkFSVkFUdktTZTdNRVRQQm5wakdPdjlZRS1ZV3BDZTdpbWM2d3ZiRUZNalVFdGRhQTdEMjZKM3dpV0xlckFIVnROUF9kOUpxaFcxWmd6TmnSAYQCQVVfeXFMUC03cE41T3YzX3dqdXNOZFNtU05DQ2phNW1iWkVTLUJzMHF5TmJGT1daZ2dtbndTbzlyUnY4b1h4b3NuRldOV3dINVdiSFB0N1RhQklzcWZYS1IwRHl3NldqT1BkOUdhb3pkVGpjV0k0NHJQdXdwMjJBRWdRWEljU2VsNVlEdmE2aUVIOUFRVTh1M2FFZ0loMzU4ZjM5bU9Mc2FQVHhMTE5WSVBDTHNVQ1VXNW1IamNQM01pMUU3TExLbTdpelAzSW05ZTg3d1IxSFF1cDIxdDB4ZjdxWDByTVQyQUoxYVlvR2duY0UyeWs0OGgxNmM2SHFDNmtCcVJ1ZldYMWU?oc=5</guid>
-<pubDate>2026-10-25T04:30:00+00:00</pubDate>
-<description>Cronistas de la peste: así se hicieron los grandes reportaje…（来源：Google 新闻 · peste（西语））</description>
 </item>
 </channel>
 </rss>
