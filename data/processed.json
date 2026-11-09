@@ -3063,7 +3063,8 @@
     "14b3e48f957aee547d4539374ff18c1d",
     "d8c28ab0ce90cd945af9dd603d96b712",
     "5c38fab3541c10c04a6eacfe180dac58",
-    "94ff5f6ed15a3170ed1ab1d0fd87da84"
+    "94ff5f6ed15a3170ed1ab1d0fd87da84",
+    "f502839ae4fc2c57518666444ff868c9"
   ],
   "ai_cache": {
     "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQQUhib19qNnAzbnI0NnVQYXc5TTZzWWpCS1B6LXZoTXVyQnJLUkNsdlNqOWxObU5JelNNLWl4cFFZVmtkSXF1Um44M2xJTnBtek41M1h3T0pmc01yX1h1NVN5NFR4eHp6LWt4ekMxbVA0VWtqakQ1YnQxbEpuTWV4QjBWOWNCeUtTZm9MSFVLWG1fWjROQTN3NzNUSWgya1kwUVpBUHJBeHdGYXRwSkVaWjBGZWl5eFFHVzhLcmlabnlxMXc?oc=5": {
@@ -59225,6 +59226,30 @@
       "source_type": "media",
       "medical_advice": false,
       "ai_processed": true
+    },
+    "https://x.com/911NewsBreaks/status/2106575938591060241": {
+      "title_zh": "X 帖文稱俄羅斯鼠疫為世衛所列最毒形式、未治 18 至 24 小時可致命",
+      "summary_zh": "【說法】@911NewsBreaks 10 月 4 日發文稱，俄羅斯鼠疫已致近 200 人隔離，世衛列為最毒鼠疫形式，未治 18 至 24 小時內可致命，經呼吸道微粒傳播。【傳播手法】全大寫 ALERT 加警示表情開頭，「最毒」「致命」等詞放大威脅感，未附世衛文件或官方來源。【背景】伊爾庫茨克防鼠疫研究所員工達里婭·希皮洛娃 9 月 29 日住院、10 月 2 日死亡，約 200 名接觸者被隔離；世衛 10 月 7 至 8 日稱俄方否認近期有鼠疫病例，是否為鼠疫仍未證實，「最毒形式」一說無依據。【時間線】9 月 29 日希皮洛娃住院；10 月 2 日首報疑似肺鼠疫、當事人死亡；10 月 4 日本帖發出。",
+      "summary_en": "",
+      "timeline": [
+        "2026-09-29 達里婭·希皮洛娃因重症肺炎在舍列霍夫住院並使用呼吸機",
+        "2026-10-02 首批媒體報導疑似肺鼠疫；希皮洛娃當日死亡",
+        "2026-10-04 @911NewsBreaks 發文稱近 200 人隔離、世衛列為最毒形式",
+        "2026-10-06 俄方向世衛回覆稱伊爾庫茨克州近期無鼠疫病例報告",
+        "2026-10-07 美國疾控中心發聲明稱密切監測伊爾庫茨克疑似肺鼠疫病例",
+        "2026-10-08 世衛總幹事譚德塞再次要求俄方提供實驗室檢測資訊"
+      ],
+      "treatment": "",
+      "relevant": true,
+      "url": "https://x.com/911NewsBreaks/status/2106575938591060241",
+      "author": "911NewsBreaks",
+      "disease_zh": "鼠疫",
+      "source_name": "X 推特 · plague（未證實）",
+      "published": "2026-10-04T00:00:00+00:00",
+      "source_type": "unverified",
+      "medical_advice": false,
+      "ai_processed": false,
+      "manual": true
     }
   }
 }
